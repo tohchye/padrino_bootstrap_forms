@@ -8,6 +8,10 @@ Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitt
 Forms with Bootstrap are crowded with additional layout markup. While it's necessary, you shouldn't have to type it every time you create a form! 
 That's why Seth  created Bootstrap Forms.
 
+Bootstrap 2.0 Compliant!
+------------------------
+A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0. 
+
 Differences Between This & The Rails Version
 ------------------------
 
