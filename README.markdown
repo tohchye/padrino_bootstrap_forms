@@ -1,34 +1,22 @@
-Bootstrap Forms
+Padrino Bootstrap Forms
 ===============
-[![Build Status](https://secure.travis-ci.org/sethvargo/bootstrap_forms.png?branch=master)](http://travis-ci.org/sethvargo/bootstrap_forms)
 
-Bootstrap Forms is a nice Rails generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Rails. 
+Padrino Bootstrap Forms is port of [Seth Vargo's Bootstrap Forms](http://github.com/sethvargo/bootstrap_forms) for Rails -thanks Seth!
 
-Forms with Bootstrap are crowded with additional layout markup. While it's necessary, you shouldn't have to type it every time you create a form! That's why I created Bootstrap Forms.
+Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino. 
 
-Bootstrap 2.0 Compliant!
+Forms with Bootstrap are crowded with additional layout markup. While it's necessary, you shouldn't have to type it every time you create a form! 
+That's why Seth  created Bootstrap Forms.
+
+Differences Between This & The Rails Version
 ------------------------
-A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0. 
 
-To get these new features, ensure you are using `bootstrap_forms ~> 2.0.0`.
-
-Note/Caution/Warning
---------------------
-There were **major** changes in the release of version `0.1.0`:
-
- 1. The gem name has officially changed from `bootstrap-forms` to `bootstrap_forms` to match gem naming conventions. The old gem still exists on rubygems for legacy applications, however, you should update to the new gem as quickly as possible. It's faster and more stable. The old gem is no longer maintained.
- 2. `form_for` is no longer overridden by default. There were multiple users who were concerned that this behavior was ill advised. Instead, a new form helper, `bootstrap_form_for` has been created. This is in line with other form building libraries.
- 3. The gem is now a Rails 3 Engine. As such, **Bootstrap Forms will not work in < Rails 3.0**. The engine is automatically mounted when including the gem in your `Gemfile`.
-
-Installation
-------------
-Add it to your `Gemfile`:
-
-    gem 'bootstrap_forms'
-
-Don't forget to run the `bundle` command. The gem will add the method `bootstrap_form_for` for use in your project. This is different from `bootstrap_forms < 0.1.0`. In previous versions, the default form builders were overridden by default. With backlash from various community members, this is no longer the default.
-
-Be sure to restart your Rails server after installing the gem.
+* `@builder.error_messages` is not automatically called when there's an error
+* The following helpers have been removed, as they are not available in Padrino 
+  * `collection_select`
+  * `country_select` 
+  * `time_zone_select`
+  * `range_field`
 
 Why?
 ----
