@@ -1,17 +1,21 @@
 module BootstrapForms
-  class FormBuilder < ::ActionView::Helpers::FormBuilder
+  class FormBuilder < ::Padrino::Helpers::FormBuilder::AbstractFormBuilder
     include BootstrapForms::Helpers::Wrappers
 
-    delegate :content_tag, :hidden_field_tag, :check_box_tag, :radio_button_tag, :button_tag, :link_to, :to => :@template
+    delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
     def error_messages
-      if object.errors.full_messages.any?
+      if object.errors.any?
         content_tag(:div, :class => 'alert alert-block alert-error validation-errors') do
-          content_tag(:h4, I18n.t('bootstrap_forms.errors.header', :model => object.class.model_name.human), :class => 'alert-heading') +
+          # TODO: :scope => [:models, :errors, :template]
+          content_tag(:h4, I18n.t('bootstrap_forms.errors.header', :model => object.class.to_s.humanize), :class => 'alert-heading') +
           content_tag(:ul) do
-            object.errors.full_messages.map do |message|
-              content_tag(:li, message)
-            end.join('').html_safe
+            # From error_messages_for()
+            object.errors.map do |f, msg|
+              # TODO: add object_name 2 scope..?
+              field = I18n.t(f, :default => f.to_s.humanize, :scope => [:models, :attributes])
+              content_tag(:li, "%s %s" % [field, msg])
+            end.join('')
           end
         end
       else
@@ -19,15 +23,14 @@ module BootstrapForms
       end
     end
 
-    %w(collection_select select country_select time_zone_select email_field file_field number_field password_field phone_field range_field search_field telephone_field text_area text_field url_field).each do |method_name|
+    %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
       define_method(method_name) do |name, *args|
         @name = name
         @field_options = args.extract_options!
-        @args = args
 
         control_group_div do
           label_field + input_div do
-            extras { super(name, *(@args << @field_options)) }
+            extras { super(name, objectify_options(@field_options)) }
           end
         end
       end
@@ -36,16 +39,15 @@ module BootstrapForms
     def check_box(name, *args)
       @name = name
       @field_options = args.extract_options!
-      @args = args
 
       control_group_div do
         input_div do
           if @field_options[:label] == false || @field_options[:label] == ''
-            extras { super(name, *(@args << @field_options)) }
+            extras { super(name, objectify_options(@field_options)) }
           else
-            label(@name, :class => [ 'checkbox', required_class ].compact.join(' ')) do
-              extras { super(name, *(@args << @field_options)) + (@field_options[:label].blank? ? human_attribute_name : @field_options[:label])}
-            end
+            # required_class
+            html = extras { super(name, objectify_options(@field_options)) + (@field_options[:label].blank? ? @name.to_s.humanize : @field_options[:label]) }
+            label(@name, :caption => html, :class => [ 'checkbox', required_class ].compact.join(' '))
           end
         end
       end
@@ -54,17 +56,20 @@ module BootstrapForms
     def radio_buttons(name, values = {}, opts = {})
       @name = name
       @field_options = opts
+
       control_group_div do
         label_field + input_div do
           values.map do |text, value|
+            # Padrino does not stringify false values
+            options = objectify_options(@field_options).merge(:value => "#{value}")
             if @field_options[:label] == '' || @field_options[:label] == false
-              extras { radio_button(name, value, @field_options) + text }
+              extras { radio_button(name, options) + text }
             else
-              label("#{@name}_#{value}", :class => [ 'radio', required_class ].compact.join(' ')) do
-                extras { radio_button(name, value, @field_options) + text }
-              end
+              # TODO: required_class
+              html = extras { radio_button(name, options) + text }
+              label("#{name}_#{value}", :caption => html, :class => [ 'radio', required_class ].compact.join(' '))
             end
-          end.join.html_safe
+          end.join
         end
       end
     end
@@ -72,19 +77,22 @@ module BootstrapForms
     def collection_check_boxes(attribute, records, record_id, record_name, *args)
       @name = attribute
       @field_options = args.extract_options!
-      @args = args
 
       control_group_div do
         label_field + extras do
           content_tag(:div, :class => 'controls') do
             records.collect do |record|
-              element_id = "#{object_name}_#{attribute}_#{record.send(record_id)}"
-              checkbox = check_box_tag("#{object_name}[#{attribute}][]", record.send(record_id), [object.send(attribute)].flatten.include?(record.send(record_id)), @field_options.merge({:id => element_id}))
+              value = record.send(record_id)
+              element_id = "#{object_model_name}_#{attribute}_#{value}"
 
+              options = objectify_options(@field_options).merge(:id => element_id, :value => value)   
+              options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
+
+              checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
               content_tag(:label, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' ')) do
                 checkbox + content_tag(:span, record.send(record_name))
               end
-            end.join('').html_safe
+            end.join('')
           end
         end
       end
@@ -99,13 +107,17 @@ module BootstrapForms
         label_field + extras do
           content_tag(:div, :class => 'controls') do
             records.collect do |record|
-              element_id = "#{object_name}_#{attribute}_#{record.send(record_id)}"
-              radiobutton = radio_button_tag("#{object_name}[#{attribute}]", record.send(record_id), object.send(attribute) == record.send(record_id), @field_options.merge({:id => element_id}))
+              value = record.send(record_id)
+              element_id = "#{object_model_name}_#{attribute}_#{value}"
 
+              options = objectify_options(@field_options).merge(:id => element_id, :value => value)   
+              options[:checked] = "checked" if value == object.send(attribute)
+
+              radiobutton = radio_button_tag("#{object_model_name}[#{attribute}]", options)
               content_tag(:label, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' ')) do
                 radiobutton + content_tag(:span, record.send(record_name))
               end
-            end.join('').html_safe
+            end.join('')
           end
         end
       end
@@ -119,35 +131,37 @@ module BootstrapForms
       control_group_div do
         label_field + input_div do
           extras do
+            value = @field_options.delete(:value)
             options = { :class => 'uneditable-input' }
             options[:id] = @field_options[:id] if @field_options[:id]
+
             content_tag(:span, options) do 
-              @field_options[:value] || object.send(@name.to_sym)
+              template.escape_html(value || object.send(@name.to_sym))
             end
           end
         end
       end
     end
 
-    def button(name = nil, *args)
+    def button(name = "Submit", *args)
       @name = name
       @field_options = args.extract_options!
-      @args = args
 
       @field_options[:class] = 'btn btn-primary'
-      super(name, *(args << @field_options))
+      # button_tag() renders <input type="button">
+      content_tag(:button, name, objectify_options(@field_options))
     end
 
-    def submit(name = nil, *args)
+    def submit(name = "Submit", *args)
       @name = name
       @field_options = args.extract_options!
-      @args = args
 
       @field_options[:class] = 'btn btn-primary'
-      super(name, *(args << @field_options))
+      super(name, objectify_options(@field_options))
     end
 
     def cancel(*args)
+      # TODO: no :back like rails
       @field_options = args.extract_options!
       link_to(I18n.t('bootstrap_forms.buttons.cancel'), (@field_options[:back] || :back), :class => 'btn cancel')
     end
@@ -155,9 +169,9 @@ module BootstrapForms
     def actions(&block)
       content_tag(:div, :class => 'form-actions') do
         if block_given?
-          yield
+          capture_html(&block)
         else
-          [submit, cancel].join(' ').html_safe
+          [submit, cancel].join(' ')
         end
       end
     end

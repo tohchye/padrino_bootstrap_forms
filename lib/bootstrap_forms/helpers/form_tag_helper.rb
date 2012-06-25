@@ -3,8 +3,8 @@ module BootstrapForms
     module FormTagHelper
       include BootstrapForms::Helpers::Wrappers
       
-      def bootstrap_form_tag(url_for_options = {}, options = {}, &block)
-        form_tag(url_for_options, options, &block)
+      def bootstrap_form_tag(url, options = {}, &block)
+        form_tag(url, options, &block)
       end
       
       %w(check_box_tag email_field_tag file_field_tag image_submit_tag number_field_tag password_field_tag phone_field_tag radio_button_tag range_field_tag search_field_tag select_tag telephone_field_tag text_area_tag text_field_tag url_field_tag).each do |method_name|

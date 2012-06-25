@@ -1,12 +1,14 @@
 require 'spec_helper'
 
 describe "BootstrapForms::FormBuilder" do
+  include BootstrapForms
+
+  # Note that Padrino label() and label_tag() gen labels differently, the former always appending a ":"  
+
   context "given a setup builder" do
     before(:each) do
-      @project = Project.new
-      @template = ActionView::Base.new
-      @template.output_buffer = ""
-      @builder = BootstrapForms::FormBuilder.new(:item, @project, @template, {}, proc {})
+      @project = Item.new
+      @builder = BootstrapForms::FormBuilder.new(self, @project)
     end
 
     describe "with no options" do
@@ -17,7 +19,7 @@ describe "BootstrapForms::FormBuilder" do
 
         context "with errors" do
           before(:each) do
-            @project.errors.add("name")
+            @project.errors["name"] << "is invalid"
             @result = @builder.error_messages
           end
 
@@ -30,15 +32,15 @@ describe "BootstrapForms::FormBuilder" do
           end
 
           it "has error title" do
-            @result.should match /<h4 class="alert-heading">#{I18n.t('bootstrap_forms.errors.header', :model => Project.model_name.human)}<\/h4>/
+            @result.should match /<h4 class="alert-heading">#{I18n.t('bootstrap_forms.errors.header', :model => Item.class.to_s.humanize)}<\/h4>/
           end
 
           it "has error message on field" do
-            @builder.text_field("name").should == "<div class=\"control-group error\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">Name is invalid</span></div></div>"
+            @builder.text_field("name").should == %|<div class="control-group error"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" class="invalid" name="item[name]" type="text" /><span class="help-inline">Name is invalid</span></div></div>|
           end
 
           it "joins passed error message and validation errors with ', '" do
-            @builder.text_field("name", :error => 'This is an error!').should == "<div class=\"control-group error\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">This is an error!, Name is invalid</span></div></div>"
+            @builder.text_field("name", :error => 'This is an error!').should == %|<div class="control-group error"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" class="invalid" name="item[name]" type="text" /><span class="help-inline">This is an error!, Name is invalid</span></div></div>|
           end
         end
       end
@@ -55,7 +57,7 @@ describe "BootstrapForms::FormBuilder" do
 
       describe "uneditable_input" do 
         it "generates wrapped input" do
-          @builder.uneditable_input("name").should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><span class=\"uneditable-input\"></span></div></div>"
+          @builder.uneditable_input("name").should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><span class="uneditable-input"></span></div></div>|
         end
 
         it "allows for an id" do
@@ -65,7 +67,7 @@ describe "BootstrapForms::FormBuilder" do
 
       describe "check_box" do
         it "generates wrapped input" do
-          @builder.check_box("name").should == "<div class=\"control-group\"><div class=\"controls\"><label class=\"checkbox\" for=\"item_name\"><input name=\"item[name]\" type=\"hidden\" value=\"0\" /><input id=\"item_name\" name=\"item[name]\" type=\"checkbox\" value=\"1\" />Name</label></div></div>"
+          @builder.check_box("name").should == %|<div class="control-group"><div class="controls"><label class="checkbox" for="item_name"><input value="0" name="item[name]" type="hidden" /><input id="item_name" value="1" name="item[name]" type="checkbox" />Name</label></div></div>|
         end
 
         it "allows custom label" do
@@ -85,7 +87,7 @@ describe "BootstrapForms::FormBuilder" do
           if RUBY_VERSION < '1.9'
             @options = ActiveSupport::OrderedHash.new
             @options['One'] = '1'
-            @options['Two'] = '2'
+n            @options['Two'] = '2'
           else
             @options = {'One' => '1', 'Two' => '2'}
           end
@@ -93,7 +95,7 @@ describe "BootstrapForms::FormBuilder" do
 
         it "doesn't use field_options from previously generated field" do
           @builder.text_field :name, :label => 'Heading', :help_inline => 'Inline help', :help_block => 'Block help'
-          @builder.radio_buttons(:name, @options).should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><label class=\"radio\" for=\"item_name_1\"><input id=\"item_name_1\" name=\"item[name]\" type=\"radio\" value=\"1\" />One</label><label class=\"radio\" for=\"item_name_2\"><input id=\"item_name_2\" name=\"item[name]\" type=\"radio\" value=\"2\" />Two</label></div></div>"
+          @builder.radio_buttons(:name, @options).should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><label class="radio" for="item_name_1"><input value="1" id="item_name_1" name="item[name]" type="radio" />One</label><label class="radio" for="item_name_2"><input value="2" id="item_name_2" name="item[name]" type="radio" />Two</label></div></div>|
         end
 
         it "sets field_options" do
@@ -102,15 +104,16 @@ describe "BootstrapForms::FormBuilder" do
         end
 
         it "generates wrapped input" do
-          @builder.radio_buttons(:name, @options).should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><label class=\"radio\" for=\"item_name_1\"><input id=\"item_name_1\" name=\"item[name]\" type=\"radio\" value=\"1\" />One</label><label class=\"radio\" for=\"item_name_2\"><input id=\"item_name_2\" name=\"item[name]\" type=\"radio\" value=\"2\" />Two</label></div></div>"
+          @builder.radio_buttons(:name, @options).should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><label class="radio" for="item_name_1"><input value="1" id="item_name_1" name="item[name]" type="radio" />One</label><label class="radio" for="item_name_2"><input value="2" id="item_name_2" name="item[name]" type="radio" />Two</label></div></div>|
         end
 
         it "allows custom label" do
           @builder.radio_buttons(:name, @options, {:label => "custom label"}).should match /custom label<\/label>/
         end
       end
-
-      (%w{email file number password range search text url }.map{|field| ["#{field}_field",field]} + [["telephone_field", "tel"], ["phone_field", "tel"]]).each do |field, type|
+      
+      # less range
+      (%w{email file number password search text url }.map{|field| ["#{field}_field",field]} + [["telephone_field", "tel"], ["phone_field", "tel"]]).each do |field, type|
         describe "#{field}" do
           context "result" do
             before(:each) do
@@ -118,11 +121,11 @@ describe "BootstrapForms::FormBuilder" do
             end
 
             it "is wrapped" do
-              @result.should match /^<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name<\/label><div class=\"controls\">.*<\/div><\/div>$/
+              @result.should match /^<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name: <\/label><div class=\"controls\">.*<\/div><\/div>$/
             end
 
             it "has an input of type: #{type}" do
-              @result.should match /<input.*type="#{type}"/
+              @result.should match /<input.*type=["#{type}"]/
             end
           end # result
 
@@ -145,37 +148,38 @@ describe "BootstrapForms::FormBuilder" do
     describe "extras" do
       context "text_field" do
         it "adds span for inline help" do
-          @builder.text_field(:name, :help_inline => 'help me!').should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">help me!</span></div></div>"
+          @builder.text_field(:name, :help_inline => 'help me!').should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" name="item[name]" type="text" /><span class="help-inline">help me!</span></div></div>|
         end
 
         it "adds help block" do
-          @builder.text_field(:name, :help_block => 'help me!').should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><p class=\"help-block\">help me!</p></div></div>"
+          @builder.text_field(:name, :help_block => 'help me!').should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" name="item[name]" type="text" /><p class="help-block">help me!</p></div></div>|
         end
 
         it "adds error message and class" do
-          @builder.text_field(:name, :error => 'This is an error!').should == "<div class=\"control-group error\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">This is an error!</span></div></div>"
+          @builder.text_field(:name, :error => 'This is an error!').should == %|<div class="control-group error"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" name="item[name]" type="text" /><span class="help-inline">This is an error!</span></div></div>|
         end
 
         it "adds success message and class" do
-          @builder.text_field(:name, :success => 'This checked out OK').should == "<div class=\"control-group success\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">This checked out OK</span></div></div>"
+          @builder.text_field(:name, :success => 'This checked out OK').should == %|<div class="control-group success"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" name="item[name]" type="text" /><span class="help-inline">This checked out OK</span></div></div>|
         end
 
         it "adds warning message and class" do
-          @builder.text_field(:name, :warning => 'Take a look at this...').should == "<div class=\"control-group warning\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"help-inline\">Take a look at this...</span></div></div>"
+          @builder.text_field(:name, :warning => 'Take a look at this...').should == %|<div class="control-group warning"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" name="item[name]" type="text" /><span class="help-inline">Take a look at this...</span></div></div>|
         end
 
         it "prepends passed text" do
-          @builder.text_field(:name, :prepend => '@').should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><div class=\"input-prepend\"><span class=\"add-on\">@</span><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /></div></div></div>"
+          @builder.text_field(:name, :prepend => '@').should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><div class="input-prepend"><span class="add-on">@</span><input id="item_name" name="item[name]" type="text" /></div></div></div>|
         end
 
         it "appends passed text" do
-          @builder.text_field(:name, :append => '@').should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><div class=\"input-append\"><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"add-on\">@</span></div></div></div>"
+          @builder.text_field(:name, :append => '@').should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><div class="input-append"><input id="item_name" name="item[name]" type="text" /><span class="add-on">@</span></div></div></div>|
         end
 
         it "prepends and appends passed text" do
-          @builder.text_field(:name, :append => '@', :prepend => '#').should == "<div class=\"control-group\"><label class=\"control-label\" for=\"item_name\">Name</label><div class=\"controls\"><div class=\"input-prepend input-append\"><span class=\"add-on\">\#</span><input id=\"item_name\" name=\"item[name]\" size=\"30\" type=\"text\" /><span class=\"add-on\">@</span></div></div></div>"
+          @builder.text_field(:name, :append => '@', :prepend => '#').should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><div class="input-prepend input-append"><span class="add-on">\#</span><input id="item_name" name="item[name]" type="text" /><span class="add-on">@</span></div></div></div>|
         end
       end
+
        context "label option" do
         %w(select email_field file_field number_field password_field search_field text_area text_field url_field).each do |method_name|
 
@@ -195,19 +199,19 @@ describe "BootstrapForms::FormBuilder" do
         it "adds additional block content" do
           @builder.actions do
             @builder.submit
-          end.should == "<div class=\"form-actions\"><input class=\"btn btn-primary\" name=\"commit\" type=\"submit\" value=\"Create Project\" /></div>"
+          end.should == %|<div class="form-actions"><input class="btn btn-primary" value="Submit" type="submit" /></div>|
         end
       end
 
       context "submit" do
         it "adds btn primary class" do
-          @builder.submit.should == "<input class=\"btn btn-primary\" name=\"commit\" type=\"submit\" value=\"Create Project\" />"
+          @builder.submit.should == %|<input class="btn btn-primary" value="Submit" type="submit" />|
         end
       end
 
       context "button" do
         it "adds btn primary class" do
-          @builder.submit.should == "<input class=\"btn btn-primary\" name=\"commit\" type=\"submit\" value=\"Create Project\" />"
+          @builder.submit.should == %|<input class="btn btn-primary" value="Submit" type="submit" />|
         end
       end
 

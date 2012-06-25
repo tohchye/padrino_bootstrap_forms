@@ -22,47 +22,49 @@ module BootstrapForms
       def error_string
         if respond_to?(:object)
           errors = object.errors[@name]
-          if errors.present?
+          if errors.any?
             errors.map { |e|
-              "#{@options[:label] || human_attribute_name} #{e}"
+              "#{@options[:label] || @name.to_s.humanize} #{e}"
             }.join(", ")
           end
         end
       end
 
-      def human_attribute_name
-        object.class.human_attribute_name(@name)
-      end
-
       def input_div(&block)
         content_tag(:div, :class => 'controls') do
           if @field_options[:append] || @field_options[:prepend]
-            klass = []
-            klass << 'input-prepend' if @field_options[:prepend]
-            klass << 'input-append' if @field_options[:append]
+            klasses = []
+            klasses << 'input-prepend' if @field_options[:prepend]
+            klasses << 'input-append' if @field_options[:append]
+            klass = klasses.join(' ')
             content_tag(:div, :class => klass, &block)
           else
-            yield if block_given?
+            capture_html(&block) if block_given?
           end
         end
       end
 
       def label_field(&block)
         if @field_options[:label] == '' || @field_options[:label] == false
-          return ''.html_safe
+          return ''
         else
+          # TODO: required_class
+          options = { :class   => ['control-label', required_class].compact.join(' ') }
+          options[:caption] = @field_options[:label] if @field_options[:label]
+
           if respond_to?(:object)
-             label(@name, block_given? ? block : @field_options[:label], :class => ['control-label', required_class].compact.join(' '))
+            label(@name, options, &block)
            else
-             label_tag(@name, block_given? ? block : @field_options[:label], :class => ['control-label', required_class].compact.join(' '))
+            label_tag(@name, options, &block)
            end
         end
       end
 
+      # TODO: detect presenct validators
       def required_class
         return 'required' if @field_options[:required]
         if respond_to?(:object)
-          return 'required' if object.class.validators_on(@name).any? { |v| v.kind_of? ActiveModel::Validations::PresenceValidator }
+          #return 'required' if object.class.validators_on(@name).any? { |v| v.kind_of? ActiveModel::Validations::PresenceValidator }
         end
         nil
       end
@@ -86,11 +88,11 @@ module BootstrapForms
       end
 
       def extras(&block)
-        [prepend, (yield if block_given?), append, help_inline, error, success, warning, help_block].join('').html_safe
+        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, help_block].join('')
       end
 
       def objectify_options(options)
-        super.except(:label, :help_inline, :error, :success, :warning, :help_block, :prepend, :append)
+        options.except(:label, :help_inline, :error, :success, :warning, :help_block, :prepend, :append)
       end
     end
   end
