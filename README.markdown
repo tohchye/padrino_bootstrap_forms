@@ -1,7 +1,7 @@
 Padrino Bootstrap Forms
 ===============
 
-Padrino Bootstrap Forms is port of [Seth Vargo's Bootstrap Forms](http://github.com/sethvargo/bootstrap_forms) for Rails -thanks Seth!
+Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](http://github.com/sethvargo/bootstrap_forms). Thanks Seth!
 
 Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino. 
 
@@ -16,11 +16,20 @@ Differences Between This & The Rails Version
 ------------------------
 
 * `@builder.error_messages` is not automatically called when there's an error
+* Models with required attributes will not have the HTML5 `required` attribute automatically added to their `input`s
 * The following helpers have been removed, as they are not available in Padrino 
   * `collection_select`
   * `country_select` 
   * `time_zone_select`
   * `range_field`
+
+Installation
+------------
+Add it to your `Gemfile`:
+
+    gem 'padrino_bootstrap_forms', :require => 'bootstrap_forms'
+
+Don't forget to run the `bundle` command. The gem will add the method `bootstrap_form_for` for use in your project.
 
 Why?
 ----

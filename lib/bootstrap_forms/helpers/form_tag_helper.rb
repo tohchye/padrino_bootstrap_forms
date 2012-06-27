@@ -2,21 +2,17 @@ module BootstrapForms
   module Helpers
     module FormTagHelper
       include BootstrapForms::Helpers::Wrappers
-      
-      def bootstrap_form_tag(url, options = {}, &block)
-        form_tag(url, options, &block)
-      end
-      
-      %w(check_box_tag email_field_tag file_field_tag image_submit_tag number_field_tag password_field_tag phone_field_tag radio_button_tag range_field_tag search_field_tag select_tag telephone_field_tag text_area_tag text_field_tag url_field_tag).each do |method_name|
+
+      %w(check_box_tag email_field_tag file_field_tag number_field_tag password_field_tag phone_field_tag radio_button_tag search_field_tag select_tag telephone_field_tag text_area_tag text_field_tag url_field_tag).each do |method_name|
         # prefix each method with bootstrap_*
         define_method("bootstrap_#{method_name}") do |name, *args|
           @name = name
           @field_options = args.extract_options!
-          @args = args
 
           control_group_div do
             label_field + input_div do
-              extras { send(method_name.to_sym, name, *(@args << @field_options)) }
+              @field_options[:id] = @name
+              extras { send(method_name.to_sym, name, objectify_options(@field_options)) }
             end
           end
         end
@@ -31,7 +27,7 @@ module BootstrapForms
           label_field + input_div do
             extras do
               content_tag(:span, :class => 'uneditable-input') do
-                @field_options[:value] 
+                escape_html(@field_options[:value])
               end
             end
           end
@@ -64,9 +60,9 @@ module BootstrapForms
       def bootstrap_actions(&block)
         content_tag(:div, :class => 'form-actions') do
           if block_given?
-            yield
+            capture_html(yield)
           else
-            [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ').html_safe
+            [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
           end
         end
       end

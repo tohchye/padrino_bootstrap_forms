@@ -48,8 +48,7 @@ module BootstrapForms
         if @field_options[:label] == '' || @field_options[:label] == false
           return ''
         else
-          # TODO: required_class
-          options = { :class   => ['control-label', required_class].compact.join(' ') }
+          options = { :class => 'control-label' }
           options[:caption] = @field_options[:label] if @field_options[:label]
 
           if respond_to?(:object)
@@ -58,15 +57,6 @@ module BootstrapForms
             label_tag(@name, options, &block)
            end
         end
-      end
-
-      # TODO: detect presenct validators
-      def required_class
-        return 'required' if @field_options[:required]
-        if respond_to?(:object)
-          #return 'required' if object.class.validators_on(@name).any? { |v| v.kind_of? ActiveModel::Validations::PresenceValidator }
-        end
-        nil
       end
 
       %w(help_inline error success warning help_block append prepend).each do |method_name|

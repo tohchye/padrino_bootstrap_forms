@@ -45,9 +45,8 @@ module BootstrapForms
           if @field_options[:label] == false || @field_options[:label] == ''
             extras { super(name, objectify_options(@field_options)) }
           else
-            # required_class
             html = extras { super(name, objectify_options(@field_options)) + (@field_options[:label].blank? ? @name.to_s.humanize : @field_options[:label]) }
-            label(@name, :caption => html, :class => [ 'checkbox', required_class ].compact.join(' '))
+            label(@name, :caption => html, :class => 'checkbox')
           end
         end
       end
@@ -65,9 +64,8 @@ module BootstrapForms
             if @field_options[:label] == '' || @field_options[:label] == false
               extras { radio_button(name, options) + text }
             else
-              # TODO: required_class
               html = extras { radio_button(name, options) + text }
-              label("#{name}_#{value}", :caption => html, :class => [ 'radio', required_class ].compact.join(' '))
+              label("#{name}_#{value}", :caption => html, :class => 'radio')
             end
           end.join
         end
