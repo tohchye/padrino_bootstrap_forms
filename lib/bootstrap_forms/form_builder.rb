@@ -130,10 +130,9 @@ module BootstrapForms
         label_field + input_div do
           extras do
             value = @field_options.delete(:value)
-            options = { :class => 'uneditable-input' }
-            options[:id] = @field_options[:id] if @field_options[:id]
+            @field_options[:class] = [@field_options[:class], 'uneditable-input'].compact.join ' '
 
-            content_tag(:span, options) do 
+            content_tag(:span, objectify_options(@field_options)) do 
               template.escape_html(value || object.send(@name.to_sym))
             end
           end
