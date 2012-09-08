@@ -2,8 +2,8 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "padrino_bootstrap_forms"
-  s.version     = "2.0.1"
-  s.author      = ["Seth Vargo", "Skye Shaw"]
+  s.version     = "0.0.1"
+  s.authors     = ["Seth Vargo", "Skye Shaw"]
   s.homepage    = "https://github.com/sshaw/padrino_bootstrap_forms"
   s.summary     = "Padrino Bootstrap Forms makes Twitter's Bootstrap on Padrino easy!"
   s.description = <<-DESC

@@ -1,6 +1,8 @@
 Padrino Bootstrap Forms
 ===============
 
+[![Build Status](https://secure.travis-ci.org/sshaw/padrino_bootstrap_forms.png?branch=master)](http://travis-ci.org/sshaw/padrino_bootstrap_forms)
+
 Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](http://github.com/sethvargo/bootstrap_forms). Thanks Seth!
 
 Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino. 

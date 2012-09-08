@@ -144,7 +144,7 @@ module BootstrapForms
       @name = name
       @field_options = args.extract_options!
 
-      @field_options[:class] = 'btn btn-primary'
+      @field_options[:class] ||= 'btn btn-primary'
       # button_tag() renders <input type="button">
       content_tag(:button, name, objectify_options(@field_options))
     end
@@ -153,14 +153,15 @@ module BootstrapForms
       @name = name
       @field_options = args.extract_options!
 
-      @field_options[:class] = 'btn btn-primary'
+      @field_options[:class] ||= 'btn btn-primary'
       super(name, objectify_options(@field_options))
     end
 
     def cancel(*args)
       # TODO: no :back like rails
       @field_options = args.extract_options!
-      link_to(I18n.t('bootstrap_forms.buttons.cancel'), (@field_options[:back] || :back), :class => 'btn cancel')
+      @field_options[:class] ||= 'btn cancel'
+      link_to(I18n.t('bootstrap_forms.buttons.cancel'), (@field_options[:back] || :back), @field_options[:class])
     end
 
     def actions(&block)
