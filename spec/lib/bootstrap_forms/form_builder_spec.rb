@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "BootstrapForms::FormBuilder" do
   include BootstrapForms
 
-  # Note that Padrino label() and label_tag() gen labels differently, the former always appending a ":"  
+  # Note that Padrino label() and label_tag() gen labels differently, the former always appending a ":"
 
   context "given a setup builder" do
     before(:each) do
@@ -55,7 +55,7 @@ describe "BootstrapForms::FormBuilder" do
         end
       end
 
-      describe "uneditable_input" do 
+      describe "uneditable_input" do
         it "generates wrapped input" do
           @builder.uneditable_input("name").should == %|<div class="control-group"><label class="control-label" for="item_name">Name: </label><div class="controls"><span class="uneditable-input"></span></div></div>|
         end
@@ -111,7 +111,7 @@ n            @options['Two'] = '2'
           @builder.radio_buttons(:name, @options, {:label => "custom label"}).should match /custom label<\/label>/
         end
       end
-      
+
       # less range
       (%w{email file number password search text url }.map{|field| ["#{field}_field",field]} + [["telephone_field", "tel"], ["phone_field", "tel"]]).each do |field, type|
         describe "#{field}" do
@@ -207,21 +207,43 @@ n            @options['Two'] = '2'
         it "adds btn primary class" do
           @builder.submit.should == %|<input class="btn btn-primary" value="Submit" type="submit" />|
         end
+
+        it "allows for custom classes" do
+          @builder.submit(:class => 'btn btn-large btn-success').should match /class="btn btn-large btn-success"/
+        end
       end
 
       context "button" do
         it "adds btn primary class" do
           @builder.submit.should == %|<input class="btn btn-primary" value="Submit" type="submit" />|
         end
+
+        it "allows for custom classes" do
+          @builder.submit(:class => 'btn btn-large btn-success').should match /class="btn btn-large btn-success"/
+        end
       end
 
       context "cancel" do
-        it "creates link with correct class" do
-          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), :back, :class => 'btn cancel').and_return("")
+        it "creates a link with the default link" do
+          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), 'javascript:history.go(-1)', instance_of(Hash))
+          @builder.cancel        
+        end
+
+        it "creates a link with a custom back link" do
+          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), '/x', instance_of(Hash))
+          @builder.cancel(:back => '/x')
+        end
+
+        it "creates link with the default class" do
+          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), instance_of(String), :class => 'btn cancel')
           @builder.cancel
+        end
+
+        it "creates a link with custom classes" do
+          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), instance_of(String), :class => 'btn btn-large my-cancel')
+          @builder.cancel(:class => 'btn btn-large my-cancel')
         end
       end
     end # actions
   end # setup builder
-
 end

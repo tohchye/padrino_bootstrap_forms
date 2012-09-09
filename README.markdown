@@ -5,14 +5,10 @@ Padrino Bootstrap Forms
 
 Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](http://github.com/sethvargo/bootstrap_forms). Thanks Seth!
 
-Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino. 
+Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino.
 
 Forms with Bootstrap are crowded with additional layout markup. While it's necessary, you shouldn't have to type it every time you create a form! 
-That's why Seth  created Bootstrap Forms.
-
-Bootstrap 2.0 Compliant!
-------------------------
-A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0. 
+That's why Seth created Bootstrap Forms.
 
 Differences Between This & The Rails Version
 ------------------------
@@ -25,13 +21,26 @@ Differences Between This & The Rails Version
   * `time_zone_select`
   * `range_field`
 
+Bootstrap 2.0 Compliant!
+------------------------
+A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0. 
+
 Installation
 ------------
 Add it to your `Gemfile`:
 
     gem 'padrino_bootstrap_forms', :require => 'bootstrap_forms'
 
-Don't forget to run the `bundle` command. The gem will add the method `bootstrap_form_for` for use in your project.
+Don't forget to run the `bundle` command. 
+
+Register it with your application:
+
+    class YourApplication < Padrino::Application
+      register BootstrapForms
+      # ...
+    end
+
+This will add the method `bootstrap_form_for` for use in your project.
 
 Why?
 ----
@@ -173,7 +182,7 @@ You can add as many options to any form helper tag. If they are interpreted by B
 
 Internationalization/Custom Errors
 ----------------------------------
-As of `1.0.2`, `bootstrap_forms` supports I18n! More support is being added, but you can change the error header and cancel button like this:
+You can change the error header and cancel button like this:
 
 ```yaml
 # config/locales/en.yml

@@ -4,6 +4,7 @@ Gem::Specification.new do |s|
   s.name        = "padrino_bootstrap_forms"
   s.version     = "0.0.1"
   s.authors     = ["Seth Vargo", "Skye Shaw"]
+  s.email	= "sshaw@lucas.cis.temple.edu"
   s.homepage    = "https://github.com/sshaw/padrino_bootstrap_forms"
   s.summary     = "Padrino Bootstrap Forms makes Twitter's Bootstrap on Padrino easy!"
   s.description = <<-DESC
