@@ -11,40 +11,7 @@ describe "BootstrapForms::FormBuilder" do
       @builder = BootstrapForms::FormBuilder.new(self, @project)
     end
 
-    describe "with no options" do
-      describe "error_messages" do
-        it "returns empty string without errors" do
-          @builder.error_messages.should == ""
-        end
-
-        context "with errors" do
-          before(:each) do
-            @project.errors["name"] << "is invalid"
-            @result = @builder.error_messages
-          end
-
-          it "is wrapped in error div" do
-            @result.should match /^<div class="alert alert-block alert-error validation-errors">.*<\/div>$/
-          end
-
-          it "has a list with errors" do
-            @result.should match /<ul><li>Name is invalid<\/li><\/ul>/
-          end
-
-          it "has error title" do
-            @result.should match /<h4 class="alert-heading">#{I18n.t('bootstrap_forms.errors.header', :model => Item.class.to_s.humanize)}<\/h4>/
-          end
-
-          it "has error message on field" do
-            @builder.text_field("name").should == %|<div class="control-group error"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" class="invalid" name="item[name]" type="text" /><span class="help-inline">Name is invalid</span></div></div>|
-          end
-
-          it "joins passed error message and validation errors with ', '" do
-            @builder.text_field("name", :error => 'This is an error!').should == %|<div class="control-group error"><label class="control-label" for="item_name">Name: </label><div class="controls"><input id="item_name" class="invalid" name="item[name]" type="text" /><span class="help-inline">This is an error!, Name is invalid</span></div></div>|
-          end
-        end
-      end
-
+    describe "with no options" do   
       describe "text_area" do
         before(:each) do
           @result = @builder.text_area "name"
@@ -225,22 +192,27 @@ n            @options['Two'] = '2'
 
       context "cancel" do
         it "creates a link with the default link" do
-          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), 'javascript:history.go(-1)', instance_of(Hash))
+          @builder.should_receive(:link_to).with('Cancel', 'javascript:history.go(-1)', instance_of(Hash))
           @builder.cancel        
         end
 
         it "creates a link with a custom back link" do
-          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), '/x', instance_of(Hash))
+          @builder.should_receive(:link_to).with('Cancel', '/x', instance_of(Hash))
           @builder.cancel(:back => '/x')
         end
 
+        it "creates a link with a custom name" do
+          @builder.should_receive(:link_to).with('Back', instance_of(String), instance_of(Hash))
+          @builder.cancel('Back')
+        end
+
         it "creates link with the default class" do
-          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), instance_of(String), :class => 'btn cancel')
+          @builder.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn cancel')
           @builder.cancel
         end
 
         it "creates a link with custom classes" do
-          @builder.should_receive(:link_to).with(I18n.t('bootstrap_forms.buttons.cancel'), instance_of(String), :class => 'btn btn-large my-cancel')
+          @builder.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn btn-large my-cancel')
           @builder.cancel(:class => 'btn btn-large my-cancel')
         end
       end

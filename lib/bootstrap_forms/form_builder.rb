@@ -4,24 +4,6 @@ module BootstrapForms
 
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
-    def error_messages
-      if object.errors.any?
-        content_tag(:div, :class => 'alert alert-block alert-error validation-errors') do
-          object_name = object.class.to_s.humanize
-          content_tag(:h4, I18n.t('bootstrap_forms.errors.header', :count => object.errors.size, :model => object_name), :class => 'alert-heading') +
-          content_tag(:ul) do
-            # From error_messages_for()
-            object.errors.map do |f, msg|
-              field = I18n.t(f, :default => f.to_s.humanize, :scope => [:models, object_name, :attributes])
-              content_tag(:li, '%s %s' % [field, msg])
-            end.join
-          end
-        end
-      else
-        '' # return empty string
-      end
-    end
-
     %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
       define_method(method_name) do |name, *args|
         @name = name
@@ -139,28 +121,30 @@ module BootstrapForms
       end
     end
 
-    def button(name = "Submit", *args)
-      @name = name
+    def button(*args)
       @field_options = args.extract_options!
-
       @field_options[:class] ||= 'btn btn-primary'
+      
+      name = args.shift || "Submit"
       # button_tag() renders <input type="button">
       content_tag(:button, name, @field_options)
     end
 
-    def submit(name = "Submit", *args)
-      @name = name
+    def submit(*args)
       @field_options = args.extract_options!
-
       @field_options[:class] ||= 'btn btn-primary'
+
+      name = args.shift || "Submit"
       super(name, @field_options)
     end
 
-    def cancel(*args)
+    def cancel(*args)      
       @field_options = args.extract_options!
       @field_options[:class] ||= 'btn cancel'
       @field_options[:back]  ||= 'javascript:history.go(-1)'
-      link_to(I18n.t('bootstrap_forms.buttons.cancel'), @field_options[:back], @field_options.except(:back))
+
+      name = args.shift || "Cancel"
+      link_to(name, @field_options[:back], @field_options.except(:back))
     end
 
     def actions(&block)
