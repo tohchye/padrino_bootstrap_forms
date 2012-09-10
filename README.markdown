@@ -13,7 +13,7 @@ That's why Seth created Bootstrap Forms.
 Differences Between This & The Rails Version
 ------------------------
 
-* `@builder.error_messages` is the Padrino version
+* `@builder.error_messages` was removed and the Padrino version is not automatically called when there's an error
 * Models with required attributes will not have the HTML5 `required` attribute automatically added to their `input`s
 * The following helpers have been removed, as they are not available in Padrino 
   * `collection_select`
