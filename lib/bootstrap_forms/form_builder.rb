@@ -8,7 +8,7 @@ module BootstrapForms
       define_method(method_name) do |name, *args|
         @name = name
         @field_options = args.extract_options!
-
+        
         control_group_div do
           label_field + input_div do
             extras { super(name, objectify_options(@field_options)) }
