@@ -18,7 +18,7 @@ module BootstrapForms
     end
 
     def padrino_check_box(field, options={})
-      super.check_box(field, options)
+      base.check_box(field, options)
     end
 
     def check_box(name, *args)
