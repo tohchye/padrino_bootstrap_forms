@@ -2,6 +2,8 @@ module BootstrapForms
   class FormBuilder < ::Padrino::Helpers::FormBuilder::AbstractFormBuilder
     include BootstrapForms::Helpers::Wrappers
 
+    alias :padrino_check_box :check_box
+
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
     %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
@@ -15,10 +17,6 @@ module BootstrapForms
           end
         end
       end
-    end
-
-    def padrino_check_box(field, options={})
-      base.check_box(field, options)
     end
 
     def check_box(name, *args)
