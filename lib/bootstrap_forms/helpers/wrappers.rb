@@ -16,7 +16,7 @@ module BootstrapForms
         klasses << 'warning' if @field_options[:warning]
         klass = klasses.join(' ')
 
-        content_tag(:div, :class => klass, &block)
+        content_tag(:div, (capture_html(&block) if block_given?), :class => klass)
       end
 
       def error_string
