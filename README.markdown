@@ -7,12 +7,10 @@ Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](ht
 
 Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino.
 
-Forms with Bootstrap are crowded with additional layout markup. While it's necessary, you shouldn't have to type it every time you create a form! 
-That's why Seth created Bootstrap Forms.
-
 Differences Between This & The Rails Version
 ------------------------
 
+* No `bootstrap` namespace for localization
 * `@builder.error_messages` was removed and the Padrino version is not automatically called when there's an error
 * Models with required attributes will not have the HTML5 `required` attribute automatically added to their `input`s
 * The following helpers have been removed, as they are not available in Padrino 
@@ -179,22 +177,6 @@ You can add as many options to any form helper tag. If they are interpreted by B
     <td>= f.text_field :name, :append => '@'</td>
   </tr>
 </table>
-
-Internationalization/Custom Errors
-----------------------------------
-You can change the error header and cancel button like this:
-
-```yaml
-# config/locales/en.yml
-en:
-  bootstrap_forms:
-    errors:
-      header: 'Your %{model} is wrong!'
-    buttons:
-      cancel: 'Forget it!'
-```
-
-Obviously you can also change to a different `lang.yml` file and use the same syntax.
 
 Contributing
 ------------

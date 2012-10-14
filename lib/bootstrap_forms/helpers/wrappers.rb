@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/except'
+
 module BootstrapForms
   module Helpers
     module Wrappers
@@ -5,7 +7,7 @@ module BootstrapForms
       def control_group_div(&block)
         field_errors = error_string
         if @field_options[:error]
-          (@field_options[:error] << ", " << field_errors) if field_errors
+          (@field_options[:error] << ', ' << field_errors) if field_errors
         else
           @field_options[:error] = field_errors
         end
@@ -25,7 +27,7 @@ module BootstrapForms
           if errors.any?
             errors.map { |e|
               "#{@options[:label] || @name.to_s.humanize} #{e}"
-            }.join(", ")
+            }.join(', ')
           end
         end
       end
@@ -78,7 +80,7 @@ module BootstrapForms
       end
 
       def extras(&block)
-        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, help_block].join
+        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, help_block].join('')
       end
 
       def objectify_options(options)

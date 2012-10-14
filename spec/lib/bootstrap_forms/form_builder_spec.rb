@@ -1,17 +1,14 @@
 require 'spec_helper'
 
 describe "BootstrapForms::FormBuilder" do
-  include BootstrapForms
-
   # Note that Padrino label() and label_tag() gen labels differently, the former always appending a ":"
-
   context "given a setup builder" do
     before(:each) do
       @project = Item.new
       @builder = BootstrapForms::FormBuilder.new(self, @project)
     end
 
-    describe "with no options" do   
+    describe "with no options" do
       describe "text_area" do
         before(:each) do
           @result = @builder.text_area "name"
@@ -54,7 +51,7 @@ describe "BootstrapForms::FormBuilder" do
           if RUBY_VERSION < '1.9'
             @options = ActiveSupport::OrderedHash.new
             @options['One'] = '1'
-n            @options['Two'] = '2'
+            @options['Two'] = '2'
           else
             @options = {'One' => '1', 'Two' => '2'}
           end
@@ -80,7 +77,7 @@ n            @options['Two'] = '2'
       end
 
       # less range
-      (%w{email file number password search text url }.map{|field| ["#{field}_field",field]} + [["telephone_field", "tel"], ["phone_field", "tel"]]).each do |field, type|
+      (%w{email file number password search text url}.map{|field| ["#{field}_field",field]} + [["telephone_field", "tel"], ["phone_field", "tel"]]).each do |field, type|
         describe "#{field}" do
           context "result" do
             before(:each) do
@@ -192,27 +189,27 @@ n            @options['Two'] = '2'
 
       context "cancel" do
         it "creates a link with the default link" do
-          @builder.should_receive(:link_to).with('Cancel', 'javascript:history.go(-1)', instance_of(Hash))
-          @builder.cancel        
+          @builder.template.should_receive(:link_to).with('Cancel', 'javascript:history.go(-1)', instance_of(Hash))
+          @builder.cancel
         end
 
         it "creates a link with a custom back link" do
-          @builder.should_receive(:link_to).with('Cancel', '/x', instance_of(Hash))
+          @builder.template.should_receive(:link_to).with('Cancel', '/x', instance_of(Hash))
           @builder.cancel(:back => '/x')
         end
 
         it "creates a link with a custom name" do
-          @builder.should_receive(:link_to).with('Back', instance_of(String), instance_of(Hash))
+          @builder.template.should_receive(:link_to).with('Back', instance_of(String), instance_of(Hash))
           @builder.cancel('Back')
         end
 
         it "creates link with the default class" do
-          @builder.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn cancel')
+          @builder.template.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn cancel')
           @builder.cancel
         end
 
         it "creates a link with custom classes" do
-          @builder.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn btn-large my-cancel')
+          @builder.template.should_receive(:link_to).with('Cancel', instance_of(String), :class => 'btn btn-large my-cancel')
           @builder.cancel(:class => 'btn btn-large my-cancel')
         end
       end

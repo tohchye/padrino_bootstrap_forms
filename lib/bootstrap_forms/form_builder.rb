@@ -4,7 +4,7 @@ module BootstrapForms
 
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
-    %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
+    %w(select email_field file_field number_field password_field search_field telephone_field text_area text_field url_field).each do |method_name|
       define_method(method_name) do |name, *args|
         @name = name
         @field_options = args.extract_options!
@@ -16,6 +16,8 @@ module BootstrapForms
         end
       end
     end
+
+    alias :phone_field :telephone_field
 
     def check_box(name, *args)
       @name = name
@@ -48,7 +50,7 @@ module BootstrapForms
               html = extras { radio_button(name, options) + text }
               label("#{name}_#{value}", :caption => html, :class => 'radio')
             end
-          end.join
+          end.join('')
         end
       end
     end
@@ -64,7 +66,7 @@ module BootstrapForms
               value = record.send(record_id)
               element_id = "#{object_model_name}_#{attribute}_#{value}"
 
-              options = objectify_options(@field_options).merge(:id => element_id, :value => value)   
+              options = objectify_options(@field_options).merge(:id => element_id, :value => value)
               options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
 
               checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
@@ -89,7 +91,7 @@ module BootstrapForms
               value = record.send(record_id)
               element_id = "#{object_model_name}_#{attribute}_#{value}"
 
-              options = objectify_options(@field_options).merge(:id => element_id, :value => value)   
+              options = objectify_options(@field_options).merge(:id => element_id, :value => value)
               options[:checked] = "checked" if value == object.send(attribute)
 
               radiobutton = radio_button_tag("#{object_model_name}[#{attribute}]", options)
@@ -113,7 +115,7 @@ module BootstrapForms
             value = @field_options.delete(:value)
             @field_options[:class] = [@field_options[:class], 'uneditable-input'].compact.join ' '
 
-            content_tag(:span, objectify_options(@field_options)) do 
+            content_tag(:span, objectify_options(@field_options)) do
               template.escape_html(value || object.send(@name.to_sym))
             end
           end
@@ -122,39 +124,19 @@ module BootstrapForms
     end
 
     def button(*args)
-      @field_options = args.extract_options!
-      @field_options[:class] ||= 'btn btn-primary'
-      
-      name = args.shift || "Submit"
-      # button_tag() renders <input type="button">
-      content_tag(:button, name, @field_options)
+      template.bootstrap_button_tag(*args)
     end
 
     def submit(*args)
-      @field_options = args.extract_options!
-      @field_options[:class] ||= 'btn btn-primary'
-
-      name = args.shift || "Submit"
-      super(name, @field_options)
+      template.bootstrap_submit_tag(*args)
     end
 
-    def cancel(*args)      
-      @field_options = args.extract_options!
-      @field_options[:class] ||= 'btn cancel'
-      @field_options[:back]  ||= 'javascript:history.go(-1)'
-
-      name = args.shift || "Cancel"
-      link_to(name, @field_options[:back], @field_options.except(:back))
+    def cancel(*args)
+      template.bootstrap_cancel_tag(*args)
     end
 
     def actions(&block)
-      content_tag(:div, :class => 'form-actions') do
-        if block_given?
-          capture_html(&block)
-        else
-          [submit, cancel].join(' ')
-        end
-      end
+      template.bootstrap_actions(&block)
     end
   end
 end

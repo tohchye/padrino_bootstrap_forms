@@ -1,4 +1,4 @@
-require "active_support"
+require 'active_support'
 
 module BootstrapForms
   extend ActiveSupport::Autoload
@@ -6,8 +6,7 @@ module BootstrapForms
   autoload :FormBuilder
   autoload :Helpers
 
-  def self.registered(app)    
-    I18n.load_path << Dir[File.join(__FILE__, "../../config/locales/*.yml")]
+  def self.registered(app)
     app.helpers Helpers::FormHelper
     app.helpers Helpers::FormTagHelper
   end
