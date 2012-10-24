@@ -6,9 +6,11 @@ module BootstrapForms
   autoload :FormBuilder
   autoload :Helpers
 
-  def self.registered(app)    
+  def self.registered(app)
     I18n.load_path << Dir[File.join(__FILE__, "../../config/locales/*.yml")]
     app.helpers Helpers::FormHelper
     app.helpers Helpers::FormTagHelper
   end
+
+  def
 end

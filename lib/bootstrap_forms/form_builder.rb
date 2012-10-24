@@ -6,6 +6,11 @@ module BootstrapForms
 
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
+    def initialize(*args)
+      @field_options = {}
+      super(*args)
+    end
+
     %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
       define_method(method_name) do |name, *args|
         @name = name
