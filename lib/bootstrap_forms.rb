@@ -11,6 +11,4 @@ module BootstrapForms
     app.helpers Helpers::FormHelper
     app.helpers Helpers::FormTagHelper
   end
-
-  def
 end
