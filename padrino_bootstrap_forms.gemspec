@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = "padrino_bootstrap_forms"
-  s.version     = "0.0.1"
+  s.version     = "0.0.2"
   s.authors     = ["Seth Vargo", "Skye Shaw"]
-  s.email	= "sshaw@lucas.cis.temple.edu"
+  s.email	= "skye.shaw@gmail.com"
   s.homepage    = "https://github.com/sshaw/padrino_bootstrap_forms"
   s.summary     = "Padrino Bootstrap Forms makes Twitter's Bootstrap on Padrino easy!"
   s.description = <<-DESC
@@ -14,9 +14,9 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "padrino-helpers", "~> 0.10.6"
+  s.add_dependency "padrino-helpers", "> 0.10.6", "< 1"
   s.add_dependency "activesupport", "~> 3.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "rack-test", "~> 0.6.1"
-  s.add_development_dependency "rspec", "~> 2.9.0"
+  s.add_development_dependency "rspec", "~> 2.9"
 end
