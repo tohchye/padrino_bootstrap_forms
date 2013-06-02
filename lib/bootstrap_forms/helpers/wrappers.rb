@@ -33,15 +33,18 @@ module BootstrapForms
       end
 
       def input_div(&block)
-        klasses = ['input']
-
         if @field_options[:append] || @field_options[:prepend]
+          klasses = []
           klasses << 'input-prepend' if @field_options[:prepend]
           klasses << 'input-append' if @field_options[:append]
+          klass = klasses.join(' ')
+          #content_tag(:div, content_tag(:div, :class => klass, &block), :class => 'controls')
+          content = content_tag(:div, :class => klass, &block)
+        else
+          #content_tag(:div, (capture_html(&block) if block_given?), :class => 'controls')
+          content = (capture_html(&block) if block_given?)
         end
-
-        klass = klasses.join(' ')
-        content_tag(:div, content_tag(:div, (capture_html(&block) if block_given?), :class => klass), :class => 'controls')
+        content_tag(:div, content, :class => 'controls')
       end
 
       def label_field(&block)
