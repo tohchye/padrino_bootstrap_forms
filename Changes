@@ -1,0 +1,4 @@
+v0.0.2  2012-05-XX
+--------------------
+Bug Fixes: 
+* FormTagHelpers methods add an id attribute to the field they create

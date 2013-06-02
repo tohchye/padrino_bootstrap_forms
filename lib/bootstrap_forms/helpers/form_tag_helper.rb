@@ -8,6 +8,7 @@ module BootstrapForms
         define_method("bootstrap_#{method_name}") do |name, *args|
           @name = name
           @field_options = args.extract_options!
+          @field_options[:id] ||= name
 
           control_group_div do
             label_field + input_div do
