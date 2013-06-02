@@ -2,13 +2,20 @@ module BootstrapForms
   class FormBuilder < ::Padrino::Helpers::FormBuilder::AbstractFormBuilder
     include BootstrapForms::Helpers::Wrappers
 
+    alias :padrino_check_box :check_box
+
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
-    %w(select email_field file_field number_field password_field search_field telephone_field text_area text_field url_field).each do |method_name|
+    def initialize(*args)
+      @field_options = {}
+      super(*args)
+    end
+
+    %w(select email_field file_field number_field password_field phone_field search_field telephone_field text_area text_field url_field).each do |method_name|
       define_method(method_name) do |name, *args|
         @name = name
         @field_options = args.extract_options!
-
+        
         control_group_div do
           label_field + input_div do
             extras { super(name, objectify_options(@field_options)) }
@@ -16,8 +23,6 @@ module BootstrapForms
         end
       end
     end
-
-    alias :phone_field :telephone_field
 
     def check_box(name, *args)
       @name = name
@@ -136,7 +141,12 @@ module BootstrapForms
     end
 
     def actions(&block)
-      template.bootstrap_actions(&block)
+      if block_given?
+        value = capture_html(&block)
+      else
+        value = [submit, cancel].join(' ')
+      end
+      content_tag(:div, value, :class => 'form-actions') 
     end
   end
 end

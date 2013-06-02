@@ -18,7 +18,7 @@ module BootstrapForms
         klasses << 'warning' if @field_options[:warning]
         klass = klasses.join(' ')
 
-        content_tag(:div, :class => klass, &block)
+        content_tag(:div, (capture_html(&block) if block_given?), :class => klass)
       end
 
       def error_string
@@ -33,17 +33,15 @@ module BootstrapForms
       end
 
       def input_div(&block)
-        content_tag(:div, :class => 'controls') do
-          if @field_options[:append] || @field_options[:prepend]
-            klasses = []
-            klasses << 'input-prepend' if @field_options[:prepend]
-            klasses << 'input-append' if @field_options[:append]
-            klass = klasses.join(' ')
-            content_tag(:div, :class => klass, &block)
-          else
-            capture_html(&block) if block_given?
-          end
+        klasses = ['input']
+
+        if @field_options[:append] || @field_options[:prepend]
+          klasses << 'input-prepend' if @field_options[:prepend]
+          klasses << 'input-append' if @field_options[:append]
         end
+
+        klass = klasses.join(' ')
+        content_tag(:div, content_tag(:div, (capture_html(&block) if block_given?), :class => klass), :class => 'controls')
       end
 
       def label_field(&block)
@@ -63,6 +61,7 @@ module BootstrapForms
 
       %w(help_inline error success warning help_block append prepend).each do |method_name|
         define_method(method_name) do |*args|
+          return '' unless @field_options
           return '' unless value = @field_options[method_name.to_sym]
           case method_name
           when 'help_block'
