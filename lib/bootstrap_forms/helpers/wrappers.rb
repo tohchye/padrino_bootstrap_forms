@@ -64,20 +64,16 @@ module BootstrapForms
 
       %w(help_inline error success warning help_block append prepend).each do |method_name|
         define_method(method_name) do |*args|
-          return '' unless @field_options
           return '' unless value = @field_options[method_name.to_sym]
           case method_name
           when 'help_block'
-            element = :p
             klass = 'help-block'
           when 'append', 'prepend'
-            element = :span
             klass = 'add-on'
           else
-            element = :span
             klass = 'help-inline'
           end
-          content_tag(element, value, :class => klass)
+          content_tag(:span, value, :class => klass)
         end
       end
 
