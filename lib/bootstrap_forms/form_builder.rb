@@ -2,8 +2,6 @@ module BootstrapForms
   class FormBuilder < ::Padrino::Helpers::FormBuilder::AbstractFormBuilder
     include BootstrapForms::Helpers::Wrappers
 
-    alias :padrino_check_box :check_box
-
     delegate :content_tag, :check_box_tag, :radio_button_tag, :link_to, :capture_html, :to => :template
 
     def initialize(*args)
