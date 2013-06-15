@@ -62,7 +62,7 @@ module BootstrapForms
         end
       end
 
-      %w(help_inline error success warning help_block append prepend).each do |method_name|
+      %w(help_block help_inline error success warning info append prepend).each do |method_name|
         define_method(method_name) do |*args|
           return '' unless value = @field_options[method_name.to_sym]
           case method_name
@@ -82,7 +82,7 @@ module BootstrapForms
       end
 
       def objectify_options(options)
-        options.except(:label, :help_inline, :error, :success, :warning, :help_block, :prepend, :append)
+        options.except(:label, :help_block, :help_inline, :error, :success, :warning, :info, :prepend, :append)
       end
     end
   end

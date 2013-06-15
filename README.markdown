@@ -162,6 +162,11 @@ You can add as many options to any form helper tag. If they are interpreted by B
     <td>= f.text_field :name, :success => 'This checked out OK'</td>
   </tr>
   <tr>
+    <th>info</th>
+    <td>Styles the field as info (blue)</td>
+    <td>= f.text_field :name, :info => 'Hey, it's OK'</td>
+  </tr>
+  <tr>
     <th>warning</th>
     <td>Styles the field as warning (yellow)</td>
     <td>= f.text_field :name, :warning => 'Take a look at this...'</td>
