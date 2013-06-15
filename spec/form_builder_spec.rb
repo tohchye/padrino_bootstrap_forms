@@ -29,14 +29,14 @@ describe BootstrapForms::FormBuilder do
         let(:format) { :erb }
       end
 
+      context "using haml" do
+        include_examples "form builder fields"
+        let(:format) { :haml }
+      end
+
       # context "using slim" do
       #   include_examples "form builder fields"
       #   let(:format) { :slim }
-      # end
-
-      # context "using haml" do
-      #   include_examples "form builder fields"
-      #   let(:format) { :haml }
       # end
     end
   end
