@@ -20,7 +20,9 @@ RSpec.configure do |config|
 
     def req(format, view, q = {})
       get "/#{format}/#{view}", q
-      clean(last_response.body)
+      body = last_response.body
+      # Only clean what looks like HTML. Makes any errors eaiser to trackdown.
+      body =~ /\A\s*<\w/ ? clean(body) : body
     end
 
     def clean(str)
@@ -28,9 +30,9 @@ RSpec.configure do |config|
     end
 
     def control_group(name, field, options = {})
-      klass = options.keys.find { |k| [:error, :succes, :warning, :info].include?(k) }
+      message = options.keys.find { |k| [:error, :success, :warning, :info].include?(k) }
       group_css = %w[control-group]
-      group_css << klass.to_s if klass
+      group_css << message.to_s if message
 
       if Hash === field
         type = field.delete(:type) || "text"
@@ -41,33 +43,35 @@ RSpec.configure do |config|
 
       expected = content_tag(:div, :class => group_css.join(" ")) do
         label_tag(name.to_s.titleize, :class => "control-label", :for => "item_#{name}") << content_tag(:div, :class => "controls") do
-          if options[:prepend] || options[:append]
-            css = []
-            nodes = []
+          css   = []
+          nodes = []
 
-            if options[:prepend]
-              css << "input-prepend"
-              nodes << content_tag(:span, options[:prepend], :class => "add-on")
-            end
-
-            nodes << field
-
-            if options[:append]
-              css << "input-append"
-              nodes << content_tag(:span, options[:append], :class => "add-on")
-            end
-
-            content_tag :div, nodes.join(""), :class => css.join(" ")
-            #TODO: need to add klass' value here too!
-          elsif options[:help_inline] || options[:help_block]
-            type, text = options[:help_inline] ?
-              [ "inline", options[:help_inline] ] :
-              [ "block",  options[:help_block] ]
-
-            field << content_tag(:span, text, :class => "help-#{type}")
-          else
-            field
+          if options[:prepend]
+            css << "input-prepend"
+            nodes << content_tag(:span, options[:prepend], :class => "add-on")
           end
+          
+          nodes << field
+
+          if options[:append]
+            css << "input-append"
+            nodes << content_tag(:span, options[:append], :class => "add-on")
+          end
+
+          if options[:help_inline] 
+            nodes << content_tag(:span, options[:help_inline], :class => "help-inline") 
+          end
+
+          if message
+            nodes << content_tag(:span, options[message], :class => "help-inline") 
+          end
+
+          if options[:help_block]
+            nodes << content_tag(:span, options[:help_block], :class => "help-block") 
+          end
+
+          html = nodes.join("")
+          css.any? ? content_tag(:div, html, :class => css.join(" ")) : html
         end
       end
 
