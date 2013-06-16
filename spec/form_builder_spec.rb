@@ -16,6 +16,23 @@ shared_examples "form builder fields" do
   end
 end
 
+shared_examples "template engines" do
+  context "using erb" do
+    let(:format) { :erb }
+    include_examples "form builder fields"      
+  end
+  
+  context "using haml" do
+    let(:format) { :haml }
+    include_examples "form builder fields"      
+  end
+   
+  # context "using slim" do
+  #   include_examples "form builder fields"
+  #   let(:format) { :slim }
+  # end
+end
+
 describe BootstrapForms::FormBuilder do
   let(:name) { :name }  
 
@@ -23,31 +40,19 @@ describe BootstrapForms::FormBuilder do
     describe "#{type}_field" do
       let(:view)  { "#{type}_field" }
       let(:field) { Hash[:type => type, :value => "sshaw"] }
-
-      context "using erb" do
-        include_examples "form builder fields"
-        let(:format) { :erb }
-      end
-
-      context "using haml" do
-        include_examples "form builder fields"
-        let(:format) { :haml }
-      end
-
-      # context "using slim" do
-      #   include_examples "form builder fields"
-      #   let(:format) { :slim }
-      # end
+      include_examples "template engines"
     end
   end
 
+  describe "#text_area" do
+    let(:view)  { "text_area" }
+    let(:field) { text_area_tag("item[name]", :id => "item_name", :value => "sshaw") }
+    include_examples "template engines"
+  end
+  
   describe "#select" do
     let(:view)  { "select_field" }
     let(:field) { select_tag("item[name]", :options => %w[sshaw fofinha], :selected => "sshaw", :id => "item_name") }
-    
-    context "using erb" do
-      include_examples "form builder fields"      
-      let(:format) { :erb }
-    end
+    include_examples "template engines"  
   end
 end

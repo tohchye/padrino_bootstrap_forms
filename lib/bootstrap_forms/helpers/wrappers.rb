@@ -13,7 +13,8 @@ module BootstrapForms
         end
 
         klasses = ['control-group']
-        klasses << 'error' if @field_options[:error]
+        klasses << 'error'   if @field_options[:error]
+        klasses << 'info'    if @field_options[:info]
         klasses << 'success' if @field_options[:success]
         klasses << 'warning' if @field_options[:warning]
         klass = klasses.join(' ')
@@ -78,7 +79,7 @@ module BootstrapForms
       end
 
       def extras(&block)
-        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, help_block].join('')
+        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, info, help_block].join('')
       end
 
       def objectify_options(options)
