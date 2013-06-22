@@ -18,15 +18,15 @@ class App < Padrino::Application
   end
   
   get "/slim/:view" do
-    slim params[:view].to_sym
+    slim "slim/#{params[:view]}".to_sym
   end
 
   get "/haml/:view" do
-    haml params[:view].to_sym
+    haml "haml/#{params[:view]}".to_sym
   end
-
+  
   get "/erb/:view" do
-    erb params[:view].to_sym
+    erb "erb/#{params[:view]}".to_sym
   end
 end
 

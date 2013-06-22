@@ -19,7 +19,7 @@ module BootstrapForms
         klasses << 'warning' if @field_options[:warning]
         klass = klasses.join(' ')
 
-        content_tag(:div, (capture_html(&block) if block_given?), :class => klass)
+        content_tag(:div, capture_html(&block), :class => klass)
       end
 
       def error_string
@@ -39,10 +39,8 @@ module BootstrapForms
           klasses << 'input-prepend' if @field_options[:prepend]
           klasses << 'input-append' if @field_options[:append]
           klass = klasses.join(' ')
-          #content_tag(:div, content_tag(:div, :class => klass, &block), :class => 'controls')
-          content = content_tag(:div, :class => klass, &block)
+          content = content_tag(:div, capture_html(&block), :class => klass)
         else
-          #content_tag(:div, (capture_html(&block) if block_given?), :class => 'controls')
           content = (capture_html(&block) if block_given?)
         end
         content_tag(:div, content, :class => 'controls')
@@ -58,6 +56,7 @@ module BootstrapForms
           if respond_to?(:object)
             label(@name, options, &block)
            else
+            options[:for] = @field_options[:id] if @field_options[:id]
             label_tag(@name, options, &block)
            end
         end

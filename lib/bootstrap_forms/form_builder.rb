@@ -110,20 +110,11 @@ module BootstrapForms
     def uneditable_input(name, *args)
       @name = name
       @field_options = args.extract_options!
-      @args = args
-
-      control_group_div do
-        label_field + input_div do
-          extras do
-            value = @field_options.delete(:value)
-            @field_options[:class] = [@field_options[:class], 'uneditable-input'].compact.join ' '
-
-            content_tag(:span, objectify_options(@field_options)) do
-              template.escape_html(value || object.send(@name.to_sym))
-            end
-          end
-        end
-      end
+      @field_options[:id] ||= field_id(@name)
+      @field_options[:label] ||= "#{field_human_name(@name)}: " # conform to Padrino's default
+      @field_options[:value] ||= object.send(@name.to_sym)
+      
+      template.uneditable_input_tag(@name, @field_options)
     end
 
     def button(*args)

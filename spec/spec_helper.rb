@@ -3,8 +3,10 @@ require "padrino-helpers"
 require "ostruct"
 require "rack/test"
 require "bootstrap_forms"
+require File.dirname(__FILE__) + "/app/app"
 
-require File.expand_path(File.dirname(__FILE__) + '/app/app')
+support = File.join(File.dirname(__FILE__), "support", "*.rb")
+Dir[support].each { |path| require path }
 
 RSpec.configure do |config|
   config.include Padrino::Helpers::OutputHelpers
@@ -33,16 +35,19 @@ RSpec.configure do |config|
       message = options.keys.find { |k| [:error, :success, :warning, :info].include?(k) }
       group_css = %w[control-group]
       group_css << message.to_s if message
-
+      label_for = "item_#{name}"
+      
       if Hash === field
-        type = field.delete(:type) || "text"
+        type  = field.delete(:type) || "text"
         fname = field.delete(:name) || "item[#{name}]"
-        field[:id] ||= "item_#{name}"
+        field[:id] ||= name
+        label_for = field[:id]
+        # for checkboxes this isn't a field_tag it's a check_box_tag
         field = send("#{type}_field_tag", fname, field)
       end
 
       expected = content_tag(:div, :class => group_css.join(" ")) do
-        label_tag(name.to_s.titleize, :class => "control-label", :for => "item_#{name}") << content_tag(:div, :class => "controls") do
+        label_tag(name.to_s.titleize, :class => "control-label", :for => label_for) << content_tag(:div, :class => "controls") do
           css   = []
           nodes = []
 
