@@ -35,15 +35,16 @@ RSpec.configure do |config|
       message = options.keys.find { |k| [:error, :success, :warning, :info].include?(k) }
       group_css = %w[control-group]
       group_css << message.to_s if message
-      label_for = "item_#{name}"
+      label_for = nil
       
       if Hash === field
         type  = field.delete(:type) || "text"
         fname = field.delete(:name) || "item[#{name}]"
         field[:id] ||= name
         label_for = field[:id]
-        # for checkboxes this isn't a field_tag it's a check_box_tag
         field = send("#{type}_field_tag", fname, field)
+      elsif field =~ /id=["']([-\w]+)["']/
+        label_for = $1
       end
 
       expected = content_tag(:div, :class => group_css.join(" ")) do

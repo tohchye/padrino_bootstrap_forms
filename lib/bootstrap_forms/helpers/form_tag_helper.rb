@@ -9,7 +9,6 @@ module BootstrapForms
           @name = name
           @field_options = args.extract_options!
           # TODO: use whatever method Padrino's builder uses...
-          p @field_options
           @field_options[:id] ||= name
 
           control_group_div do
