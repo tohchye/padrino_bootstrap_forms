@@ -26,13 +26,17 @@ module BootstrapForms
         @field_options = args.extract_options!
         @args = args
 
+        # Padrino will always generate a label's for attribute, this results in invalid HTML.
+        # label_field will use :id as the for attribute if present.
+        @field_options[:id] = nil unless @field_options[:id]
+
         control_group_div do
           label_field + input_div do
             extras do
               # Due to how Padrino implements ERB this block (and others) will be called many (4?) times.
               # To avoid string accumulation under :class -and to keep option passing somewhat straightforward- we just dup()
               options = @field_options.dup
-              options[:class] = [options[:class], 'uneditable-input'].compact.join ' ' 
+              options[:class] = [options[:class], 'uneditable-input'].compact.join " "
 
               content_tag(:span,  escape_html(options[:value]), objectify_options(options.except(:value)))
             end
