@@ -1,12 +1,18 @@
 shared_examples "form builder" do
   let(:name) { :name }
   
-  [:email, :file, :number, :password, :phone, :search, :text, :url].each do |type|
+  [:email, :number, :password, :phone, :search, :text, :url].each do |type|
     describe "#{type}_field" do
       let(:view)  { "#{type}_field" }
       let(:field) { Hash[:type => type, :value => "sshaw", :id => "item_name", :name => "item[name]"] }
       it_should_behave_like "a form field"
     end
+  end
+
+  describe "#file" do
+    let(:view)  { "file_field" }
+    let(:field) { file_field_tag("item[name]", :id => "item_name") }
+    it_should_behave_like "a form field"
   end
 
   describe "#uneditable_input" do
@@ -22,7 +28,7 @@ shared_examples "form builder" do
   end
 
   describe "#select" do
-    let(:view)  { "select_field" }
+    let(:view)  { "select" }
     let(:field) { select_tag("item[name]", :options => %w[sshaw fofinha], :selected => "sshaw", :id => "item_name") }
     it_should_behave_like "a form field"
   end
