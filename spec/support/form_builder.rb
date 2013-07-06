@@ -102,14 +102,6 @@ shared_examples "form builder" do
   describe "#collection_check_boxes" do
   end
 
-
-  # same structure as other fields
-  describe "#radio_buttons" do
-    let(:view)  { "radio_buttons" }
-    let(:field) { radio_button_tag(:name, :value => "a", :id => "item_name") }
-    it_should_behave_like "a form field"
-  end
-
   # same as collect check box
   describe "#collection_radio_buttons" do
   end
