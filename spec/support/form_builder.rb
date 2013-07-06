@@ -32,13 +32,13 @@ shared_examples "form builder" do
     let(:field) { select_tag("item[name]", :options => %w[sshaw fofinha], :selected => "sshaw", :id => "item_name") }
     it_should_behave_like "a form field"
   end
-
-  describe "#check_box" do
-    let(:view)  { "check_box" }
-    let(:field) { check_box_tag(:name, :value => "sshaw", :id => "item_name") }
-    # <div class=\"control-group\"><div class=\"controls\">
-    #   <label class=\"checkbox\" for=\"item_name\"><input value=\"0\" name=\"item[name]\" type=\"hidden\" /><input id=\"item_name\" value=\"1\" name=\"item[name]\" type=\"checkbox\" />Name</label>
-    # </div></div>
-    #it_should_behave_like "a form field"
-  end
 end
+
+
+
+
+
+
+
+
+

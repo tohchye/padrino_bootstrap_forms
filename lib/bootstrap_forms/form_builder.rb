@@ -48,9 +48,9 @@ module BootstrapForms
             # Padrino does not stringify false values
             options = objectify_options(@field_options).merge(:value => "#{value}")
             if @field_options[:label] == '' || @field_options[:label] == false
-              extras { radio_button(name, options) + text }
+              extras { radio_button(name, options) << text }
             else
-              html = extras { radio_button(name, options) + text }
+              html = extras { radio_button(name, options) << text }
               label("#{name}_#{value}", :caption => html, :class => 'radio')
             end
           end.join('')
@@ -62,22 +62,23 @@ module BootstrapForms
       @name = attribute
       @field_options = args.extract_options!
 
+      @args = args
+
       control_group_div do
-        label_field + extras do
-          content_tag(:div, :class => 'controls') do
-            records.collect do |record|
-              value = record.send(record_id)
-              element_id = "#{object_model_name}_#{attribute}_#{value}"
+        boxes = records.map do |record|
+          value = record.send(record_id)
+          element_id = "#{object_model_name}_#{attribute}_#{value}"
+          
+          options = objectify_options(@field_options).merge(:id => element_id, :value => value)
+          options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
 
-              options = objectify_options(@field_options).merge(:id => element_id, :value => value)
-              options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
-
-              checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
-              content_tag(:label, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' ')) do
-                checkbox + content_tag(:span, record.send(record_name))
-              end
-            end.join('')
-          end
+          checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)          
+          checkbox << record.send(record_name)
+          content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))          
+        end.join('')
+        
+        content_tag(:div, :class => 'controls') do   
+          label_field << extras { boxes }
         end
       end
     end
@@ -88,21 +89,14 @@ module BootstrapForms
       @args = args
 
       control_group_div do
-        label_field + extras do
-          content_tag(:div, :class => 'controls') do
-            records.collect do |record|
-              value = record.send(record_id)
-              element_id = "#{object_model_name}_#{attribute}_#{value}"
-
-              options = objectify_options(@field_options).merge(:id => element_id, :value => value)
-              options[:checked] = "checked" if value == object.send(attribute)
-
-              radiobutton = radio_button_tag("#{object_model_name}[#{attribute}]", options)
-              content_tag(:label, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' ')) do
-                radiobutton + content_tag(:span, record.send(record_name))
-              end
-            end.join('')
-          end
+        buttons = records.map do |record|
+          radiobutton = radio_button(attribute, objectify_options(@field_options).reverse_merge(:value => record.send(record_id)))
+          radiobutton << record.send(record_name)
+          content_tag(:label, radiobutton, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))          
+        end.join('')
+        
+        content_tag(:div, :class => 'controls') do   
+          label_field << extras { buttons }
         end
       end
     end
