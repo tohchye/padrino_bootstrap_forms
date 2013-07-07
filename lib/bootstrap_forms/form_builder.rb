@@ -53,7 +53,7 @@ module BootstrapForms
           options = { :caption => html, :class => 'radio' }
           options[:for] = @field_options.include?(:id) if @field_options[:id]
           label("#{name}_#{value}", options)
-        end.join('')
+        end.join('').html_safe
 
         # This will create a for attribute
         # a "for" attribute without a cooresponding element is an error
@@ -80,7 +80,7 @@ module BootstrapForms
           checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
           checkbox << record.send(record_name)
           content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))
-        end.join('')
+        end.join('').html_safe
 
         content_tag(:div, :class => 'controls') do
           label_field << extras { boxes }
@@ -98,7 +98,7 @@ module BootstrapForms
           radiobutton = radio_button(attribute, objectify_options(@field_options).reverse_merge(:value => record.send(record_id)))
           radiobutton << record.send(record_name)
           content_tag(:label, radiobutton, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
-        end.join('')
+        end.join('').html_safe
 
         content_tag(:div, :class => 'controls') do
           label_field << extras { buttons }
@@ -130,7 +130,7 @@ module BootstrapForms
 
     def actions(&block)
       content_tag(:div, :class => 'form-actions') do
-        block_given? ? capture_html(&block) : [submit, cancel].join(' ')
+        block_given? ? capture_html(&block) : [submit, cancel].join(' ').html_safe
       end
     end
   end
