@@ -34,7 +34,7 @@ shared_examples "form builder" do
   end
 
   describe "#radio_buttons" do
-    def radio_button
+    def radio_button(name, options = {})
       content_tag(:label, :class => "radio", :for => "item_name") do
         field = hidden_field_tag("item[name]", :value => 0) <<
           radio_button_tag("item[name]", :id => "item_name", :value => 1)
@@ -43,9 +43,10 @@ shared_examples "form builder" do
       end
     end
 
+    # Need to add Hash options from view
     it "renders the field" do
       html = control_group do
-        content_tag(:label, "Name", :class => "control-label") << controls { radio_button }
+        content_tag(:label, "Name: ", :class => "control-label") << controls { radio_button }
       end
       
       req(format, "radio_buttons").should eq clean(html)

@@ -57,6 +57,7 @@ module BootstrapForms
 
         # This will create a for attribute
         # a "for" attribute without a cooresponding element is an error
+        @field_options[:id] = nil
         label_field << extras do
           content_tag(:div, buttons, :class => 'controls')
         end

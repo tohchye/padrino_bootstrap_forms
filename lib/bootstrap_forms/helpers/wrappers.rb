@@ -51,13 +51,13 @@ module BootstrapForms
           return ''
         else
           options = { :class => 'control-label' }
+          options[:for] = @field_options[:id] if @field_options.include?(:id)
           options[:caption] = @field_options[:label] if @field_options[:label]
 
           if respond_to?(:object)
             label(@name, options, &block)
            else
             # Allow for setting for to nil i.e., no for attribute. Padrino will always generate one
-            options[:for] = @field_options[:id] if @field_options.include?(:id)
             label_tag(@name, options, &block)
            end
         end

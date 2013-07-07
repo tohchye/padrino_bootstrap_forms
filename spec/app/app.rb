@@ -1,3 +1,7 @@
+require "rubygems" unless defined?(Gem)
+require "bundler/setup"
+Bundler.require(:default, "development") # Gemfile from gemspec puts dev dependencies in this group
+
 class App < Padrino::Application
   register Padrino::Rendering
   register Padrino::Helpers
