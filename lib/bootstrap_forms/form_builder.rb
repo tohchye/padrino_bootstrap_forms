@@ -50,8 +50,7 @@ module BootstrapForms
           html = radio_button(name, objectify_options(@field_options).merge(:value => "#{value}"))
           html << text
 
-          options = { :caption => html, :class => 'radio' }
-          options[:for] = @field_options.include?(:id) if @field_options[:id]
+          options = { :caption => html, :class => 'radio', :for => nil }
           label("#{name}_#{value}", options)
         end.join('')
 
@@ -68,8 +67,6 @@ module BootstrapForms
       @name = attribute
       @field_options = args.extract_options!
 
-      @args = args
-
       control_group_div do
         boxes = records.map do |record|
           value = record.send(record_id)
@@ -83,25 +80,33 @@ module BootstrapForms
           content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))
         end.join('')
 
-        content = label_field << extras { boxes }
-        content_tag(:div, content, :class => 'controls')
+        # Prevent "for" attribute for a non existant id
+        @field_options[:id] = nil
+        label_field << extras do
+          input_div { boxes }
+        end
       end
     end
 
     def collection_radio_buttons(attribute, records, record_id, record_name, *args)
       @name = attribute
       @field_options = args.extract_options!
-      @args = args
 
       control_group_div do
         buttons = records.map do |record|
-          radiobutton = radio_button(attribute, objectify_options(@field_options).reverse_merge(:value => record.send(record_id)))
-          radiobutton << record.send(record_name)
-          content_tag(:label, radiobutton, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
+          value = record.send(record_id)
+          element_id = "#{object_model_name}_#{attribute}_#{value}"
+          options = objectify_options(@field_options).merge(:id => element_id, :value => value)
+          radio = radio_button(attribute, options)
+          radio << record.send(record_name)
+          content_tag(:label, radio, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
         end.join('')
 
-        content = label_field << extras { buttons }
-        content_tag(:div, content, :class => 'controls')
+        # Prevent "for" attribute for a non existant id
+        @field_options[:id] = nil
+        label_field << extras do
+          input_div { buttons }
+        end
       end
     end
 

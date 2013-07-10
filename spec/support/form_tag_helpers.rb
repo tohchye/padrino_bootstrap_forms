@@ -42,7 +42,7 @@ shared_examples "form tag helpers" do
     end
 
     it "allows for custom classes" do
-      bootstrap_submit_tag(:class => "btn-large btn-success").should eq %|<input class="btn btn-large btn-success" value="Submit" type="submit" />|
+      bootstrap_submit_tag(:class => "btn-large btn-success").should eq %|<input class="btn-large btn-success" value="Submit" type="submit" />|
     end
   end
 
@@ -62,7 +62,7 @@ shared_examples "form tag helpers" do
     end
 
     it "allows for custom classes" do
-      bootstrap_submit_tag(:class => "btn-large btn-success").should match /class="btn btn-large btn-success"/
+      bootstrap_submit_tag(:class => "btn-large btn-success").should match /class="btn-large btn-success"/
     end
   end
 
@@ -80,7 +80,7 @@ shared_examples "form tag helpers" do
     end
 
     it "creates a link with custom classes" do
-      bootstrap_cancel_tag(:class => "btn-large my-cancel").should eq %|<a class="btn btn-large my-cancel" href="javascript:history.go(-1)">Back</a>|
+      bootstrap_cancel_tag(:class => "btn-large my-cancel").should eq %|<a class="btn-large my-cancel" href="javascript:history.go(-1)">Cancel</a>|
     end
   end
 end

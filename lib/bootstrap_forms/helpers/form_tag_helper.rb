@@ -46,10 +46,8 @@ module BootstrapForms
 
       def bootstrap_button_tag(*args)
         options = args.extract_options!
-        klass = ["btn"]
-        klass << (options[:class] || "btn-primary")
+        options[:class] ||= 'btn btn-primary'
 
-        options[:class] = klass.join " "
         name = args.shift || 'Submit'
         # button_tag() renders <input type="button">
         content_tag(:button, name, options)
@@ -57,21 +55,15 @@ module BootstrapForms
 
       def bootstrap_submit_tag(*args)
         options = args.extract_options!
-        klass = ["btn"]
-        klass << (options[:class] || "btn-primary")
+        options[:class] ||= 'btn btn-primary'
 
-        options[:class] = klass.join " "
         name = args.shift || 'Submit'
         submit_tag(name, options)
       end
 
-      # TODO: Need to allow for btn-XXX classes
       def bootstrap_cancel_tag(*args)
         options = args.extract_options!
-        klass = ["btn cancel"]
-        klass << options[:class] if options[:class]
-
-        options[:class] = klass.join " "
+        options[:class] ||= 'btn cancel'
         options[:back] ||= 'javascript:history.go(-1)'
 
         name = args.shift || 'Cancel'
@@ -80,7 +72,8 @@ module BootstrapForms
 
       def bootstrap_actions(&block)
         content = block_given? ? capture_html(&block) : [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
-        content_tag(:div, content, :class => 'form-actions')
+        # TODO: concat_content might (have been) be the answer to the various block problems encountered
+        concat_content content_tag(:div, content, :class => 'form-actions')
       end
     end
   end

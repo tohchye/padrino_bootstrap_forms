@@ -13,9 +13,9 @@ describe BootstrapForms do
     include_examples "form tag helpers"
   end
 
-  #context "using slim" do
-  # let(:format) { :slim }
-  # include_examples "form tag helpers"
-  # include_examples "form builder"
-  #end
+  context "using slim" do
+    let(:format) { :slim }
+    include_examples "form tag helpers"
+    include_examples "form builder"
+  end
 end

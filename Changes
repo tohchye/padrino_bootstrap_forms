@@ -1,6 +1,7 @@
-v0.0.2  2012-XX-XX
+v0.0.2  2013-XX-XX
 --------------------
 Bug Fixes:
+* Various failures when using Slim (thanks Ivan Zhidkov)
 * Various failures when using ERB (thanks Ken Erickson & Luke Antins)
 * :help_inline and :help_block now use <span> and not <p>
-* FormTagHelpers methods add an id attribute to the field they create
+* FormTagHelpers methods add an id attribute to the fields they create

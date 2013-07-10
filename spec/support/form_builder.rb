@@ -34,21 +34,23 @@ shared_examples "form builder" do
   end
 
   describe "#radio_buttons" do
-    def radio_button(name, options = {})
-      content_tag(:label, :class => "radio", :for => "item_name") do
-        field = hidden_field_tag("item[name]", :value => 0) <<
-          radio_button_tag("item[name]", :id => "item_name", :value => 1)
-        field << yield if block_given?
-        field
-      end
-    end
+    # def radio_button(name, options = {})
+    #   content_tag(:label, :class => "radio", :for => "item_name") do
+    #     field = hidden_field_tag("item[name]", :value => 0) <<
+    #       radio_button_tag("item[name]", :id => "item_name", :value => 1)
+    #     field << yield if block_given?
+    #     field
+    #   end
+    # end
 
     # Need to add Hash options from view
     it "renders the field" do
       html = control_group do
-        content_tag(:label, "Name: ", :class => "control-label") << controls { radio_button }
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          radio_button("Fofinho", "a") << radio_button("Galinho", "b")
+        end
       end
-      
+
       req(format, "radio_buttons").should eq clean(html)
     end
   end
@@ -99,11 +101,69 @@ shared_examples "form builder" do
     end
   end
 
-  # .cg { label + .extras { .controls { .... } } }
   describe "#collection_check_boxes" do
+    def check_box(name, value, checked = false)
+      options = { :id => "item_name_#{value}", :value => value }
+      options[:checked] = "checked" if checked
+
+      content_tag(:label, :class => "checkbox") do
+        check_box_tag("item[name][]", options) << name
+      end
+    end
+
+    it "renders the field" do
+      html = control_group do
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          check_box("Fofinho", "a") << check_box("Galinho", "b")
+        end
+      end
+
+      req(format, "collection_check_boxes").should eq clean(html)
+    end
+
+    it "renders the selected field as checked" do
+      html = control_group do
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          check_box("Fofinho", "a", true) << check_box("Galinho", "b")
+        end
+      end
+
+      req(format, "collection_check_boxes_with_checked").should eq clean(html)
+    end
   end
 
-  # same as collect check box
-  describe "#collection_radio_buttons" do
+  def radio_button(name, value, checked = false)
+    options = { :id => "item_name_#{value}", :value => value }
+    options[:checked] = "checked" if checked
+    
+    content_tag(:label, :class => "radio") do
+      radio_button_tag("item[name]", options) << name
+    end
   end
+
+  describe "#collection_radio_buttons" do
+    it "renders the field" do
+      html = control_group do
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          radio_button("Fofinho", "a") << radio_button("Galinho", "b")
+        end
+      end
+
+      req(format, "collection_radio_buttons").should eq clean(html)
+    end
+
+    it "renders the selected field as checked" do
+      html = control_group do
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          radio_button("Fofinho", "a", true) << radio_button("Galinho", "b")
+        end
+      end
+
+      req(format, "collection_radio_buttons_with_checked").should eq clean(html)
+    end
+  end
+
+  describe "#submit" do
+
+  end  
 end
