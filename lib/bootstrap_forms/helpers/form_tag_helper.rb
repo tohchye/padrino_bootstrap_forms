@@ -13,7 +13,7 @@ module BootstrapForms
 
           control_group_div do
             label_field + input_div do
-              extras { send(method_name.to_sym, name, objectify_options(@field_options)) }
+              send(method_name.to_sym, name, objectify_options(@field_options))
             end
           end
         end
@@ -31,15 +31,13 @@ module BootstrapForms
         @field_options[:id] = nil unless @field_options[:id]
 
         control_group_div do
-          label_field + input_div do
-            extras do
-              # Due to how Padrino implements ERB this block (and others) will be called many (4?) times.
-              # To avoid string accumulation under :class -and to keep option passing somewhat straightforward- we just dup()
-              options = @field_options.dup
-              options[:class] = [options[:class], 'uneditable-input'].compact.join " "
+          label_field << input_div do
+            # Due to how Padrino implements ERB this block (and others) will be called many (4?) times.
+            # To avoid string accumulation under :class -and to keep option passing somewhat straightforward- we just dup()
+            options = @field_options.dup
+            options[:class] = [options[:class], 'uneditable-input'].compact.join " "
 
-              content_tag(:span,  escape_html(options[:value]), objectify_options(options.except(:value)))
-            end
+            content_tag(:span,  escape_html(options[:value]), objectify_options(options.except(:value)))
           end
         end
       end
@@ -72,7 +70,8 @@ module BootstrapForms
 
       def bootstrap_actions(&block)
         content = block_given? ? capture_html(&block) : [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
-        # TODO: concat_content might (have been) be the answer to the various block problems encountered
+        # TODO: concat_content might (have been) be the answer to the various block problems encountered?
+        # Slim doesn't like concat_content!
         concat_content content_tag(:div, content, :class => 'form-actions')
       end
     end

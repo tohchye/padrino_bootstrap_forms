@@ -61,8 +61,6 @@ shared_examples "form builder" do
         field = hidden_field_tag("item[name]", :value => 0) <<
           check_box_tag("item[name]", :id => "item_name", :value => 1) <<
           "Name"
-        field << yield if block_given?
-        field
       end
     end
 
@@ -80,7 +78,7 @@ shared_examples "form builder" do
       it "renders the field using the :#{option} option" do
         html = control_group do
           controls do
-            check_box { content_tag(:span, option.to_s.titleize, :class => klass) }
+            check_box << content_tag(:span, option.to_s.titleize, :class => klass)
           end
         end
 
@@ -92,7 +90,7 @@ shared_examples "form builder" do
       it "renders the field using the :#{state} option" do
         html = control_group(state) do
           controls do
-            check_box { content_tag(:span, state.to_s.titleize, :class => "help-inline") }
+            check_box << content_tag(:span, state.to_s.titleize, :class => "help-inline")
           end
         end
 
@@ -101,9 +99,10 @@ shared_examples "form builder" do
     end
   end
 
+  # TODO: This and the collection_radio_buttons tests are fragile, they depend on the order of the keys in options
   describe "#collection_check_boxes" do
     def check_box(name, value, checked = false)
-      options = { :id => "item_name_#{value}", :value => value }
+      options = {  :value => value, :id => "item_name_#{value}" }
       options[:checked] = "checked" if checked
 
       content_tag(:label, :class => "checkbox") do
@@ -130,10 +129,20 @@ shared_examples "form builder" do
 
       req(format, "collection_check_boxes_with_checked").should eq clean(html)
     end
+
+    it "renders the field using the :help_block option" do
+      html = control_group do
+        label_tag("Name", :class => "control-label", :for => nil) << controls do
+          check_box("Fofinho", "a") << check_box("Galinho", "b") <<  content_tag(:span, "Help Block", :class => "help-block")
+        end 
+      end
+
+      req(format, "collection_check_boxes_with_help_block").should eq clean(html)
+    end
   end
 
   def radio_button(name, value, checked = false)
-    options = { :id => "item_name_#{value}", :value => value }
+    options = { :value => value, :id => "item_name_#{value}"}
     options[:checked] = "checked" if checked
     
     content_tag(:label, :class => "radio") do
@@ -162,8 +171,4 @@ shared_examples "form builder" do
       req(format, "collection_radio_buttons_with_checked").should eq clean(html)
     end
   end
-
-  describe "#submit" do
-
-  end  
 end

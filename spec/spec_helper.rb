@@ -64,17 +64,26 @@ RSpec.configure do |config|
           css   = []
           nodes = []
 
-          if options[:prepend]
-            css << "input-prepend"
-            nodes << content_tag(:span, options[:prepend], :class => "add-on")
+          if options[:prepend] || options[:append]
+            addons = ""
+            addons_css = []
+
+            if options[:prepend]
+              addons << content_tag(:span, options[:prepend], :class => "add-on")
+              addons_css << "input-prepend" 
+            end
+
+            addons << field
+
+            if options[:append]
+              addons << content_tag(:span, options[:append], :class => "add-on")
+              addons_css << "input-append" 
+            end
+
+            field = content_tag(:div, addons, :class => addons_css.join(" "))
           end
           
           nodes << field
-
-          if options[:append]
-            css << "input-append"
-            nodes << content_tag(:span, options[:append], :class => "add-on")
-          end
 
           if options[:help_inline] 
             nodes << content_tag(:span, options[:help_inline], :class => "help-inline") 
@@ -88,8 +97,7 @@ RSpec.configure do |config|
             nodes << content_tag(:span, options[:help_block], :class => "help-block") 
           end
 
-          html = nodes.join("")
-          css.any? ? content_tag(:div, html, :class => css.join(" ")) : html
+          nodes.join("")
         end
       end
 
@@ -108,9 +116,10 @@ class Errors < Hash
   def initialize
     super { |h, v| h[v] = [] }
   end
-
+  
   def each
-    super do |k, v|
+    super do |k|
+      k, v = k[0..1]
       v.each { |e| yield(k, e) }
     end
   end

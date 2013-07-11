@@ -15,8 +15,8 @@ module BootstrapForms
         @field_options = args.extract_options!
 
         control_group_div do
-          label_field + input_div do
-            extras { super(name, objectify_options(@field_options)) }
+          label_field << input_div do
+            super(name, objectify_options(@field_options))
           end
         end
       end
@@ -29,9 +29,9 @@ module BootstrapForms
       control_group_div do
         input_div do
           if @field_options[:label] == false || @field_options[:label] == ''
-            extras { super(name, objectify_options(@field_options)) }
+            super(name, objectify_options(@field_options))
           else
-            html = extras { super(name, objectify_options(@field_options)) << (@field_options[:label].blank? ? @name.to_s.humanize : @field_options[:label]) }
+            html = super(name, objectify_options(@field_options)) << (@field_options[:label].blank? ? @name.to_s.humanize : @field_options[:label])
             options = { :caption => html, :class => 'checkbox' }
             options[:for] = @field_options[:id] if @field_options.include?(:id)
             label(@name, options)
@@ -44,22 +44,19 @@ module BootstrapForms
       @name = name
       @field_options = opts
 
+      buttons = values.map do |text, value|
+        # Padrino does not stringify false values
+        html = radio_button(name, objectify_options(@field_options).merge(:value => "#{value}"))
+        html << text
+
+        options = { :caption => html, :class => 'radio', :for => nil }
+        label("#{name}_#{value}", options)
+      end.join('')
+
       control_group_div do
-        buttons = values.map do |text, value|
-          # Padrino does not stringify false values
-          html = radio_button(name, objectify_options(@field_options).merge(:value => "#{value}"))
-          html << text
-
-          options = { :caption => html, :class => 'radio', :for => nil }
-          label("#{name}_#{value}", options)
-        end.join('')
-
-        # This will create a for attribute
-        # a "for" attribute without a cooresponding element is an error
+        # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
-        label_field << extras do
-          content_tag(:div, buttons, :class => 'controls')
-        end
+        label_field << input_div { buttons }
       end
     end
 
@@ -67,24 +64,22 @@ module BootstrapForms
       @name = attribute
       @field_options = args.extract_options!
 
+      boxes = records.map do |record|
+        value = record.send(record_id)
+        element_id = "#{object_model_name}_#{attribute}_#{value}"
+
+        options = objectify_options(@field_options).merge(:value => value, :id => element_id)
+        options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
+
+        checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
+        checkbox << record.send(record_name)
+        content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))
+      end.join('')
+
       control_group_div do
-        boxes = records.map do |record|
-          value = record.send(record_id)
-          element_id = "#{object_model_name}_#{attribute}_#{value}"
-
-          options = objectify_options(@field_options).merge(:id => element_id, :value => value)
-          options[:checked] = "checked" if [object.send(attribute)].flatten.include?(value)
-
-          checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
-          checkbox << record.send(record_name)
-          content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))
-        end.join('')
-
         # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
-        label_field << extras do
-          input_div { boxes }
-        end
+        label_field << input_div { boxes }
       end
     end
 
@@ -92,21 +87,19 @@ module BootstrapForms
       @name = attribute
       @field_options = args.extract_options!
 
-      control_group_div do
-        buttons = records.map do |record|
-          value = record.send(record_id)
-          element_id = "#{object_model_name}_#{attribute}_#{value}"
-          options = objectify_options(@field_options).merge(:id => element_id, :value => value)
-          radio = radio_button(attribute, options)
-          radio << record.send(record_name)
-          content_tag(:label, radio, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
-        end.join('')
+      buttons = records.map do |record|
+        value = record.send(record_id)
+        element_id = "#{object_model_name}_#{attribute}_#{value}"
+        options = objectify_options(@field_options).merge(:value => value, :id => element_id)
+        radio = radio_button(attribute, options)
+        radio << record.send(record_name)
+        content_tag(:label, radio, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
+      end.join('')
 
+      control_group_div do
         # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
-        label_field << extras do
-          input_div { buttons }
-        end
+        label_field << input_div { buttons }
       end
     end
 

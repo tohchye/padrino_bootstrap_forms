@@ -5,13 +5,6 @@ module BootstrapForms
     module Wrappers
       private
       def control_group_div(&block)
-        field_errors = error_string
-        if @field_options[:error]
-          (@field_options[:error] << ', ' << field_errors) if field_errors
-        else
-          @field_options[:error] = field_errors
-        end
-
         klasses = ['control-group']
         klasses << 'error'   if @field_options[:error]
         klasses << 'info'    if @field_options[:info]
@@ -19,7 +12,7 @@ module BootstrapForms
         klasses << 'warning' if @field_options[:warning]
         klass = klasses.join(' ')
 
-        content_tag(:div, capture_html(&block), :class => klass)
+        content_tag(:div, block[], :class => klass)
       end
 
       def error_string
@@ -39,10 +32,12 @@ module BootstrapForms
           klasses << 'input-prepend' if @field_options[:prepend]
           klasses << 'input-append' if @field_options[:append]
           klass = klasses.join(' ')
-          content = content_tag(:div, capture_html(&block), :class => klass)
+          content = content_tag(:div, addon { block[] }, :class => klass)
         else
-          content = (capture_html(&block) if block_given?)
+          content = block[]
         end
+
+        content << messages
         content_tag(:div, content, :class => 'controls')
       end
 
@@ -78,8 +73,12 @@ module BootstrapForms
         end
       end
 
-      def extras(&block)
-        [prepend, (capture_html(&block) if block_given?), append, help_inline, error, success, warning, info, help_block].join('')
+      def messages
+        [help_inline, error, success, warning, info, help_block].join('')
+      end
+
+      def addon(&block)
+        [prepend, block[], append].join('')
       end
 
       def objectify_options(options)

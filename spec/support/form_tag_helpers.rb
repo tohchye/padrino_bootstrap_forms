@@ -32,7 +32,7 @@ shared_examples "form tag helpers" do
 
   describe "uneditable_input_tag" do
     let(:view)  { "uneditable_input_tag" }
-    let(:field) { content_tag(:span, "sshaw", :class => "uneditable-input",) }
+    let(:field) { content_tag(:span, "sshaw", :class => "uneditable-input") }
     it_should_behave_like "a form field"
   end
 
