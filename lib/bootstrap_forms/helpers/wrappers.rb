@@ -5,6 +5,13 @@ module BootstrapForms
     module Wrappers
       private
       def control_group_div(&block)
+        field_errors = error_string
+        if @field_options[:error]
+          (@field_options[:error] << ', ' << field_errors) if field_errors
+        else
+          @field_options[:error] = field_errors
+        end
+
         klasses = ['control-group']
         klasses << 'error'   if @field_options[:error]
         klasses << 'info'    if @field_options[:info]
