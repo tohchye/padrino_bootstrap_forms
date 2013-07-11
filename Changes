@@ -1,6 +1,7 @@
 v0.0.2  2013-XX-XX
 --------------------
 Bug Fixes:
+* Fix conflict between Wrappers.error and Padrino's error helper (thanks Ivan Zhidkov)
 * Various failures when using Slim (thanks Ivan Zhidkov)
 * Various failures when using ERB (thanks Ken Erickson & Luke Antins)
 * :help_inline and :help_block now use <span> and not <p>

@@ -65,8 +65,10 @@ module BootstrapForms
         end
       end
 
-      %w(help_block help_inline error success warning info append prepend).each do |method_name|
+      %w(help_block help_inline bootstrap_error success warning info append prepend).each do |method_name|
         define_method(method_name) do |*args|
+          # Hack to avoid clashing with Padrino's error method 
+          method_name = "error" if method_name == "bootstrap_error"
           return '' unless value = @field_options[method_name.to_sym]
           case method_name
           when 'help_block'
@@ -81,7 +83,7 @@ module BootstrapForms
       end
 
       def messages
-        [help_inline, error, success, warning, info, help_block].join('')
+        [help_inline, bootstrap_error, success, warning, info, help_block].join('')
       end
 
       def addon(&block)
