@@ -1,6 +1,5 @@
 require "padrino"
 require "padrino-helpers"
-require "ostruct"
 require "rack/test"
 require "bootstrap_forms"
 require File.dirname(__FILE__) + "/app/app"
@@ -8,9 +7,9 @@ require File.dirname(__FILE__) + "/app/app"
 support = File.join(File.dirname(__FILE__), "support", "*.rb")
 Dir[support].each { |path| require path }
 
-module SpecHelper
-  VALIDATION_STATES = [:error, :success, :warning, :info]
+VALIDATION_STATES = [:error, :success, :warning, :info]
 
+module SpecHelper
   def app
     Padrino.application
   end
@@ -95,25 +94,6 @@ module SpecHelper
     end
 
     clean(expected)
-  end
-end
-
-class Item < OpenStruct
-  def errors
-    @errors ||= Errors.new
-  end
-end
-
-class Errors < Hash
-  def initialize
-    super { |h, v| h[v] = [] }
-  end
-  
-  def each
-    super do |k|
-      k, v = k[0..1]
-      v.each { |e| yield(k, e) }
-    end
   end
 end
 

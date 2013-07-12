@@ -2,6 +2,27 @@ require "rubygems" unless defined?(Gem)
 require "bundler/setup"
 Bundler.require(:default, "development") # Gemfile from gemspec puts dev dependencies in this group
 
+require "ostruct"
+
+class Item < OpenStruct
+  def errors
+    @errors ||= Errors.new
+  end
+end
+
+class Errors < Hash
+  def initialize
+    super { |h, v| h[v] = [] }
+  end
+  
+  def each
+    super do |k|
+      k, v = k[0..1]
+      v.each { |e| yield(k, e) }
+    end
+  end
+end
+
 class App < Padrino::Application
   register Padrino::Rendering
   register Padrino::Helpers
