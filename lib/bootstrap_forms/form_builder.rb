@@ -27,11 +27,12 @@ module BootstrapForms
       @field_options = args.extract_options!
 
       control_group_div do
-        input_div do
+        input_div(false) do
           if @field_options[:label] == false || @field_options[:label] == ''
-            super(name, objectify_options(@field_options))
+            super(name, objectify_options(@field_options)) << messages
           else
             html = super(name, objectify_options(@field_options)) << (@field_options[:label].blank? ? @name.to_s.humanize : @field_options[:label])
+            html << messages
             options = { :caption => html, :class => 'checkbox' }
             options[:for] = @field_options[:id] if @field_options.include?(:id)
             label(@name, options)

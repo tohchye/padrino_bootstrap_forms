@@ -33,7 +33,7 @@ module BootstrapForms
         end
       end
 
-      def input_div(&block)
+      def input_div(include_messages = true, &block) 
         if @field_options[:append] || @field_options[:prepend]
           klasses = []
           klasses << 'input-prepend' if @field_options[:prepend]
@@ -44,7 +44,7 @@ module BootstrapForms
           content = block[]
         end
 
-        content << messages
+        content << messages if include_messages
         content_tag(:div, content, :class => 'controls')
       end
 

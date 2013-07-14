@@ -51,6 +51,8 @@ shared_examples "form builder" do
         field = hidden_field_tag("item[name]", :value => 0) <<
           check_box_tag("item[name]", :id => "item_name", :value => 1) <<
           "Name"
+        field << yield if block_given?
+        field
       end
     end
 
@@ -68,7 +70,7 @@ shared_examples "form builder" do
       it "renders the field using the :#{option} option" do
         html = control_group do
           controls do
-            check_box << content_tag(:span, option.to_s.titleize, :class => klass)
+            check_box { content_tag(:span, option.to_s.titleize, :class => klass) }
           end
         end
 
@@ -80,7 +82,7 @@ shared_examples "form builder" do
       it "renders the field using the :#{state} option" do
         html = control_group(state) do
           controls do
-            check_box << content_tag(:span, state.to_s.titleize, :class => "help-inline")
+            check_box { content_tag(:span, state.to_s.titleize, :class => "help-inline") }
           end
         end
 
