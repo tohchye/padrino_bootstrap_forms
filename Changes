@@ -1,4 +1,4 @@
-v0.0.2  2013-XX-XX
+v0.0.2  2013-07-14
 --------------------
 Bug Fixes:
 * Fix conflict between Wrappers.error and Padrino's error helper (thanks Ivan Zhidkov)

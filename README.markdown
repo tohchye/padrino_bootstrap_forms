@@ -18,6 +18,7 @@ Differences Between This & The Rails Version
   * `country_select` 
   * `time_zone_select`
   * `range_field`
+  * Various other additions made to `bootstrap_forms` after `v3`
 
 Bootstrap 2.0 Compliant!
 ------------------------

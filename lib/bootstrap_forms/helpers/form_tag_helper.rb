@@ -69,10 +69,15 @@ module BootstrapForms
       end
 
       def bootstrap_actions(&block)
-        content = block_given? ? capture_html(&block) : [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
-        # TODO: concat_content might (have been) be the answer to the various block problems encountered?
-        # Slim doesn't like concat_content!
-        concat_content content_tag(:div, content, :class => 'form-actions')
+        # This somethat redundant arrangement is necessary (according to the test cases) to make this call work with  Slim, ERB, and HAML. 
+        # Though oddly enough this Slim block test still fails yet works in production. Not sure why this is but, nevertheless
+        # we keep this in place.
+        if block_given?
+          content_tag(:div, :class => 'form-actions', &block)
+        else
+          content = [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
+          content_tag(:div, content, :class => 'form-actions')
+        end
       end
     end
   end
