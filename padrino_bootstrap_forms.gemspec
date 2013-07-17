@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-
+  s.license       = "MIT"
   s.add_dependency "padrino", "~> 0.10.6"
   s.add_dependency "activesupport", "~> 3.0"
   s.add_development_dependency "rake"
