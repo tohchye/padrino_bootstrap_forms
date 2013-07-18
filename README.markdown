@@ -7,6 +7,11 @@ Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](ht
 
 Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino.
 
+Padrio Version
+------------------------
+If your Padrino version is < 0.11 you must use version 0.0.2 of this gem.
+
+
 Differences Between This & The Rails Version
 ------------------------
 
