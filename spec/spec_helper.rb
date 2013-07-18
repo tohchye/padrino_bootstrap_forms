@@ -72,7 +72,7 @@ module SpecHelper
             addons_css << "input-append" 
           end
 
-          field = content_tag(:div, addons, :class => addons_css.join(" "))
+          field = content_tag(:div, addons.html_safe, :class => addons_css.join(" "))
         end
         
         nodes << field
@@ -89,7 +89,7 @@ module SpecHelper
           nodes << content_tag(:span, options[:help_block], :class => "help-block") 
         end
 
-        nodes.join("")
+        nodes.join("").html_safe
       end
     end
 

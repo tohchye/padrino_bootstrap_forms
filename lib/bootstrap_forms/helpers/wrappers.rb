@@ -33,7 +33,7 @@ module BootstrapForms
         end
       end
 
-      def input_div(include_messages = true, &block) 
+      def input_div(include_messages = true, &block)
         if @field_options[:append] || @field_options[:prepend]
           klasses = []
           klasses << 'input-prepend' if @field_options[:prepend]
@@ -67,7 +67,7 @@ module BootstrapForms
 
       %w(help_block help_inline bootstrap_error success warning info append prepend).each do |method_name|
         define_method(method_name) do |*args|
-          # Hack to avoid clashing with Padrino's error method 
+          # Hack to avoid clashing with Padrino's error method
           method_name = "error" if method_name == "bootstrap_error"
           return '' unless value = @field_options[method_name.to_sym]
           case method_name
@@ -83,11 +83,11 @@ module BootstrapForms
       end
 
       def messages
-        [help_inline, bootstrap_error, success, warning, info, help_block].join('')
+        [help_inline, bootstrap_error, success, warning, info, help_block].join('').html_safe
       end
 
       def addon(&block)
-        [prepend, block[], append].join('')
+        [prepend, block[], append].join('').html_safe
       end
 
       def objectify_options(options)

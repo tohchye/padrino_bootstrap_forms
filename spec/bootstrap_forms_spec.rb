@@ -1,10 +1,6 @@
 require "spec_helper"
 
 describe BootstrapForms do
-  def app
-    Padrino.application
-  end
-
   context "using erb" do
     let(:format) { :erb }
     include_examples "form tag helpers"

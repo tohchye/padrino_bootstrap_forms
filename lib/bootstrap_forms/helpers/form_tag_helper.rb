@@ -12,10 +12,10 @@ module BootstrapForms
           @field_options[:id] ||= name
 
           control_group_div do
-            label_field + input_div do
+            label_field << input_div do
               send(method_name.to_sym, name, objectify_options(@field_options))
             end
-          end
+          end.html_safe
         end
       end
 
@@ -39,7 +39,7 @@ module BootstrapForms
 
             content_tag(:span,  escape_html(options[:value]), objectify_options(options.except(:value)))
           end
-        end
+        end.html_safe
       end
 
       def bootstrap_button_tag(*args)
@@ -48,7 +48,7 @@ module BootstrapForms
 
         name = args.shift || 'Submit'
         # button_tag() renders <input type="button">
-        content_tag(:button, name, options)
+        content_tag(:button, name, options).html_safe
       end
 
       def bootstrap_submit_tag(*args)
@@ -56,7 +56,7 @@ module BootstrapForms
         options[:class] ||= 'btn btn-primary'
 
         name = args.shift || 'Submit'
-        submit_tag(name, options)
+        submit_tag(name, options).html_safe
       end
 
       def bootstrap_cancel_tag(*args)
@@ -65,7 +65,7 @@ module BootstrapForms
         options[:back] ||= 'javascript:history.go(-1)'
 
         name = args.shift || 'Cancel'
-        link_to(name, options[:back], options.except(:back))
+        link_to(name, options[:back], options.except(:back)).html_safe
       end
 
       def bootstrap_actions(&block)
@@ -75,7 +75,7 @@ module BootstrapForms
         if block_given?
           content_tag(:div, :class => 'form-actions', &block)
         else
-          content = [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ')
+          content = [bootstrap_submit_tag, bootstrap_cancel_tag].join(' ').html_safe
           content_tag(:div, content, :class => 'form-actions')
         end
       end

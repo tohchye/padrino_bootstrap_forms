@@ -18,7 +18,7 @@ module BootstrapForms
           label_field << input_div do
             super(name, objectify_options(@field_options))
           end
-        end
+        end.html_safe
       end
     end
 
@@ -38,7 +38,7 @@ module BootstrapForms
             label(@name, options)
           end
         end
-      end
+      end.html_safe
     end
 
     def radio_buttons(name, values = {}, opts = {})
@@ -52,13 +52,13 @@ module BootstrapForms
 
         options = { :caption => html, :class => 'radio', :for => nil }
         label("#{name}_#{value}", options)
-      end.join('')
+      end.join('').html_safe
 
       control_group_div do
         # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
         label_field << input_div { buttons }
-      end
+      end.html_safe
     end
 
     def collection_check_boxes(attribute, records, record_id, record_name, *args)
@@ -75,13 +75,13 @@ module BootstrapForms
         checkbox = check_box_tag("#{object_model_name}[#{attribute}][]", options)
         checkbox << record.send(record_name)
         content_tag(:label, checkbox, :class => ['checkbox', ('inline' if @field_options[:inline])].compact.join(' '))
-      end.join('')
+      end.join('').html_safe
 
       control_group_div do
         # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
         label_field << input_div { boxes }
-      end
+      end.html_safe
     end
 
     def collection_radio_buttons(attribute, records, record_id, record_name, *args)
@@ -95,13 +95,13 @@ module BootstrapForms
         radio = radio_button(attribute, options)
         radio << record.send(record_name)
         content_tag(:label, radio, :class => ['radio', ('inline' if @field_options[:inline])].compact.join(' '))
-      end.join('')
+      end.join('').html_safe
 
       control_group_div do
         # Prevent "for" attribute for a non existant id
         @field_options[:id] = nil
         label_field << input_div { buttons }
-      end
+      end.html_safe
     end
 
     def uneditable_input(name, *args)
@@ -128,7 +128,7 @@ module BootstrapForms
 
     def actions(&block)
       content = block_given? ? capture_html(&block) : [submit, cancel].join(' ')
-      content_tag(:div, content, :class => 'form-actions')
+      content_tag(:div, content, :class => 'form-actions').html_safe
     end
   end
 end
