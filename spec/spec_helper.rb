@@ -17,13 +17,7 @@ module SpecHelper
 
   def req(format, view, q = {})
     get "/#{format}/#{view}", q
-    body = last_response.body
-    # Only clean what looks like HTML. Makes any errors eaiser to trackdown.
-    body =~ /\A\s*<\w/ ? clean(body) : body
-  end
-
-  def clean(str)
-    str.gsub(/\s{2,}|\n/, "")
+    last_response.body
   end
 
   def control_group(klasses = nil)
@@ -94,7 +88,7 @@ module SpecHelper
       end
     end
 
-    clean(expected)
+    expected
   end
 end
 
