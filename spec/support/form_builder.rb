@@ -41,7 +41,7 @@ shared_examples "form builder" do
         end
       end
 
-      req(format, "radio_buttons").should eq clean(html)
+      req(format, "radio_buttons").should equal_xml html
     end
   end
 
@@ -61,7 +61,7 @@ shared_examples "form builder" do
         controls { check_box }
       end
 
-      req(format, "check_box").should eq clean(html)
+      req(format, "check_box").should equal_xml html
     end
 
     [:help_block, :help_inline].each do |option|
@@ -74,7 +74,7 @@ shared_examples "form builder" do
           end
         end
 
-        req(format, "check_box_with_#{option}").should eq clean(html)
+        req(format, "check_box_with_#{option}").should equal_xml html
       end
     end
 
@@ -86,7 +86,7 @@ shared_examples "form builder" do
           end
         end
 
-        req(format, "check_box_with_#{state}").should eq clean(html)
+        req(format, "check_box_with_#{state}").should equal_xml html
       end
     end
   end
@@ -109,7 +109,7 @@ shared_examples "form builder" do
         end
       end
 
-      req(format, "collection_check_boxes").should eq clean(html)
+      req(format, "collection_check_boxes").should equal_xml html
     end
 
     it "renders the selected field as checked" do
@@ -119,17 +119,17 @@ shared_examples "form builder" do
         end
       end
 
-      req(format, "collection_check_boxes_with_checked").should eq clean(html)
+      req(format, "collection_check_boxes_with_checked").should equal_xml html
     end
 
     it "renders the field using the :help_block option" do
       html = control_group do
         label_tag("Name", :class => "control-label", :for => nil) << controls do
           check_box("Fofinho", "a") << check_box("Galinho", "b") <<  content_tag(:span, "Help Block", :class => "help-block")
-        end 
+        end
       end
 
-      req(format, "collection_check_boxes_with_help_block").should eq clean(html)
+      req(format, "collection_check_boxes_with_help_block").should equal_xml html
     end
   end
 
@@ -141,7 +141,7 @@ shared_examples "form builder" do
         end
       end
 
-      req(format, "collection_radio_buttons").should eq clean(html)
+      req(format, "collection_radio_buttons").should equal_xml html
     end
 
     it "renders the selected field as checked" do
@@ -151,14 +151,14 @@ shared_examples "form builder" do
         end
       end
 
-      req(format, "collection_radio_buttons_with_checked").should eq clean(html)
+      req(format, "collection_radio_buttons_with_checked").should equal_xml html
     end
   end
 
   def radio_button(name, value, checked = false)
     options = { :value => value, :id => "item_name_#{value}"}
     options[:checked] = "checked" if checked
-    
+
     content_tag(:label, :class => "radio") do
       radio_button_tag("item[name]", options) << name
     end

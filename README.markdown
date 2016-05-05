@@ -1,11 +1,11 @@
 Padrino Bootstrap Forms
 ===============
 
-[![Build Status](https://secure.travis-ci.org/sshaw/padrino_bootstrap_forms.png?branch=master)](http://travis-ci.org/sshaw/padrino_bootstrap_forms)
+[![Build Status](https://secure.travis-ci.org/sshaw/padrino_bootstrap_forms.svg?branch=master)](http://travis-ci.org/sshaw/padrino_bootstrap_forms)
 
 Padrino Bootstrap Forms is a port of [Seth Vargo's Bootstrap Forms for Rails](http://github.com/sethvargo/bootstrap_forms). Thanks Seth!
 
-Bootstrap Forms is a nice generator that makes working with [Bootstrap (by Twitter)](http://twitter.github.com/bootstrap) even easier on Padrino.
+It currently renders forms using Bootstrap 2 markup.
 
 Padrio Version
 ------------------------
@@ -18,16 +18,16 @@ Differences Between This & The Rails Version
 * No `bootstrap` namespace for localization
 * `@builder.error_messages` was removed and the Padrino version is not automatically called when there's an error
 * Models with required attributes will not have the HTML5 `required` attribute automatically added to their `input`s
-* The following helpers have been removed, as they are not available in Padrino 
+* The following helpers have been removed, as they are not available in Padrino
   * `collection_select`
-  * `country_select` 
+  * `country_select`
   * `time_zone_select`
   * `range_field`
   * Various other additions made to `bootstrap_forms` after `v3`
 
 Bootstrap 2.0 Compliant!
 ------------------------
-A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0. 
+A super special thanks to [vincenzor](https://github.com/vincenzor) for updating `bootstrap_forms` to comply with the new methods and features in Twitter Bootstrap 2.0.
 
 Installation
 ------------
@@ -35,7 +35,7 @@ Add it to your `Gemfile`:
 
     gem 'padrino_bootstrap_forms', :require => 'bootstrap_forms'
 
-Don't forget to run the `bundle` command. 
+Don't forget to run the `bundle` command.
 
 Register it with your application:
 
@@ -93,8 +93,6 @@ See description above...
 = f.radio_buttons :published, { "Published" => true, "Unpublished" => false }
 ```
 
-Ruby 1.8 doesn't guarantee hashes are ordered. If you care, pass in nested arrays or `ActiveSupport::OrderedHash`.
-
 Uneditable Input
 ----------------
 Bootstrap Forms adds another helper method that generates the necessary markup for uneditable inputs:
@@ -121,7 +119,7 @@ Bootstrap Forms also adds a default actions panel when you call `f.submit`:
 ```haml
 = f.submit
 ```
-    
+
 generates:
 
 ```html

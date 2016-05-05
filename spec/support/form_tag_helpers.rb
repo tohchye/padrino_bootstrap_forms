@@ -38,27 +38,27 @@ shared_examples "form tag helpers" do
 
   describe "bootstrap_submit_tag" do
     it "adds btn primary class" do
-      bootstrap_submit_tag.should eq %|<input class="btn btn-primary" value="Submit" type="submit" />|
+      bootstrap_submit_tag.should equal_xml %|<input class="btn btn-primary" value="Submit" type="submit" />|
     end
 
     it "allows for custom classes" do
-      bootstrap_submit_tag(:class => "btn-large btn-success").should eq %|<input class="btn-large btn-success" value="Submit" type="submit" />|
+      bootstrap_submit_tag(:class => "btn-large btn-success").should equal_xml %|<input class="btn-large btn-success" value="Submit" type="submit" />|
     end
   end
 
   describe "bootstrap_actions" do
     it "renders submit and cancel tags by default" do
-      req(format, "bootstrap_actions").should eq %|<div class="form-actions"><input class="btn btn-primary" value="Submit" type="submit" /> <a class="btn cancel" href="javascript:history.go(-1)">Cancel</a></div>|
+      req(format, "bootstrap_actions").should equal_xml %|<div class="form-actions"><input class="btn btn-primary" value="Submit" type="submit" /> <a class="btn cancel" href="javascript:history.go(-1)">Cancel</a></div>|
     end
 
     it "renders using content from the provided block" do
-      req(format, "bootstrap_actions_with_block").should eq %|<div class="form-actions"><a class="btn cancel" href="javascript:history.go(-1)">No!</a></div>|
+      req(format, "bootstrap_actions_with_block").should equal_xml %|<div class="form-actions"><a class="btn cancel" href="javascript:history.go(-1)">No!</a></div>|
     end
   end
 
   describe "bootstrap_button_tag" do
     it "adds btn primary class" do
-      bootstrap_submit_tag.should == %|<input class="btn btn-primary" value="Submit" type="submit" />|
+      bootstrap_submit_tag.should equal_xml %|<input class="btn btn-primary" value="Submit" type="submit" />|
     end
 
     it "allows for custom classes" do
@@ -68,19 +68,19 @@ shared_examples "form tag helpers" do
 
   describe "bootstrap_cancel_tag" do
     it "creates a link with the default href" do
-      bootstrap_cancel_tag.should eq %|<a class="btn cancel" href="javascript:history.go(-1)">Cancel</a>|
+      bootstrap_cancel_tag.should equal_xml %|<a class="btn cancel" href="javascript:history.go(-1)">Cancel</a>|
     end
 
     it "creates a link with the given back option" do
-      bootstrap_cancel_tag(:back => "/x").should eq  %|<a class="btn cancel" href="/x">Cancel</a>|
+      bootstrap_cancel_tag(:back => "/x").should equal_xml  %|<a class="btn cancel" href="/x">Cancel</a>|
     end
 
     it "creates a link with the given text" do
-      bootstrap_cancel_tag("Back").should eq  %|<a class="btn cancel" href="javascript:history.go(-1)">Back</a>|
+      bootstrap_cancel_tag("Back").should equal_xml  %|<a class="btn cancel" href="javascript:history.go(-1)">Back</a>|
     end
 
     it "creates a link with custom classes" do
-      bootstrap_cancel_tag(:class => "btn-large my-cancel").should eq %|<a class="btn-large my-cancel" href="javascript:history.go(-1)">Cancel</a>|
+      bootstrap_cancel_tag(:class => "btn-large my-cancel").should equal_xml %|<a class="btn-large my-cancel" href="javascript:history.go(-1)">Cancel</a>|
     end
   end
 end
