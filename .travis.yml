@@ -12,6 +12,6 @@ before_install:
 notifications:
   email: false
 
-gemfiles:
+gemfile:
   - Gemfile
   - gemfiles/padrino-0.11
