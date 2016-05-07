@@ -1,12 +1,9 @@
-require 'active_support'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/delegation'
 
 module BootstrapForms
-  extend ActiveSupport::Autoload
-
-  autoload :FormBuilder
-  autoload :Helpers
+  autoload :FormBuilder, 'bootstrap_forms/form_builder'
+  autoload :Helpers, 'bootstrap_forms/helpers'
 
   def self.registered(app)
     app.helpers Helpers::FormHelper

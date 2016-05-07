@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.license       = "MIT"
-  s.add_dependency "padrino", "~> 0.11.0"
-  s.add_dependency "activesupport", "~> 3.1"
+  s.add_dependency "padrino", "~> 0.11", "< 0.13"
+  s.add_dependency "activesupport", "~> 3.1", "< 5"
   s.add_development_dependency "rake"
   s.add_development_dependency "slim"
   s.add_development_dependency "erubis"
