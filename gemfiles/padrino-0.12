@@ -1,0 +1,4 @@
+source "http://rubygems.org"
+
+gemspec :path => ".."
+gem "padrino", ">= 0.12.6", "< 0.13"

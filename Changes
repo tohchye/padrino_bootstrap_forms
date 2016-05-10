@@ -1,3 +1,8 @@
+v0.1.1  2016-05-10
+--------------------
+Changes:
+* Support for Padrino >= 0.12.6 and >= 0.13.2 (thanks Igor Bochkario)
+
 v0.1.0  2013-07-20
 --------------------
 Changes:

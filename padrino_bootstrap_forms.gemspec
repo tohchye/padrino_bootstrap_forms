@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "padrino_bootstrap_forms"
-  s.version     = "0.1.0"
+  s.version     = "0.1.1"
   s.authors     = ["Seth Vargo", "Skye Shaw"]
   s.email	= "skye.shaw@gmail.com"
   s.homepage    = "https://github.com/sshaw/padrino_bootstrap_forms"
@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.license       = "MIT"
-  s.add_dependency "padrino", "~> 0.11", "< 0.13"
+  # Will only work with 0.11, 0.12 >= 12.6 and 0.13 >= 0.13.2
+  s.add_dependency "padrino", "~> 0.11", "!= 0.12.0", "!= 0.12.1", "!= 0.12.2", "!= 0.12.3", "!= 0.12.4", "!= 0.12.5", "!= 0.13.0", "!= 0.13.1"
   s.add_dependency "activesupport", "~> 3.1", "< 5"
   s.add_development_dependency "rake"
   s.add_development_dependency "slim"
