@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.license       = "MIT"
   # Will only work with 0.11, 0.12 >= 12.6 and 0.13 >= 0.13.2
   s.add_dependency "padrino", "~> 0.11", "!= 0.12.0", "!= 0.12.1", "!= 0.12.2", "!= 0.12.3", "!= 0.12.4", "!= 0.12.5", "!= 0.13.0", "!= 0.13.1"
-  s.add_dependency "activesupport", ">= 3.1", "< 5"
+  s.add_dependency "activesupport", ">= 3.1"
   s.add_development_dependency "rake"
   s.add_development_dependency "slim"
   s.add_development_dependency "erubis"
